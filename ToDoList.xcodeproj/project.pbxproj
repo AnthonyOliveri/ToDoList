@@ -19,6 +19,7 @@
 		BF9616E41867E51F002C6A7A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9616CC1867E51E002C6A7A /* UIKit.framework */; };
 		BF9616EC1867E51F002C6A7A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BF9616EA1867E51F002C6A7A /* InfoPlist.strings */; };
 		BF9616EE1867E51F002C6A7A /* ToDoListTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BF9616ED1867E51F002C6A7A /* ToDoListTests.m */; };
+		BF9616F81867E812002C6A7A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF9616F71867E812002C6A7A /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		BF9616E91867E51F002C6A7A /* ToDoListTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ToDoListTests-Info.plist"; sourceTree = "<group>"; };
 		BF9616EB1867E51F002C6A7A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		BF9616ED1867E51F002C6A7A /* ToDoListTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToDoListTests.m; sourceTree = "<group>"; };
+		BF9616F71867E812002C6A7A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 			children = (
 				BF9616D71867E51E002C6A7A /* ToDoList_AppDelegate.h */,
 				BF9616D81867E51E002C6A7A /* ToDoList_AppDelegate.m */,
+				BF9616F71867E812002C6A7A /* Main.storyboard */,
 				BF9616DA1867E51E002C6A7A /* Images.xcassets */,
 				BF9616CF1867E51E002C6A7A /* Supporting Files */,
 			);
@@ -220,6 +223,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF9616F81867E812002C6A7A /* Main.storyboard in Resources */,
 				BF9616D31867E51E002C6A7A /* InfoPlist.strings in Resources */,
 				BF9616DB1867E51E002C6A7A /* Images.xcassets in Resources */,
 			);
