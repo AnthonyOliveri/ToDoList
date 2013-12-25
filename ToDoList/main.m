@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ToDoList_AppDelegate.h"
+#import "TDLAppDelegate.h"
 
 int main(int argc, char * argv[])
 {
     @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([ToDoList_AppDelegate class]));
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([TDLAppDelegate class]));
     }
 }

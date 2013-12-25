@@ -1,5 +1,5 @@
 //
-//  ToDoList_ToDoListViewController.h
+//  ToDoList_AddToDoItemViewController.h
 //  ToDoList
 //
 //  Created by Anthony Oliveri on 12/23/13.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ToDoList_ToDoListViewController : UITableViewController
+@interface TDLAddToDoItemViewController : UIViewController
 
 @end

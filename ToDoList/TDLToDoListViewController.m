@@ -1,19 +1,19 @@
 //
-//  ToDoList_ToDoListViewController.m
+//  TDLToDoListViewController.m
 //  ToDoList
 //
 //  Created by Anthony Oliveri on 12/23/13.
 //  Copyright (c) 2013 Anthony Oliveri. All rights reserved.
 //
 
-#import "ToDoList_ToDoListViewController.h"
+#import "TDLToDoListViewController.h"
 
-@interface ToDoList_ToDoListViewController ()
+@interface TDLToDoListViewController ()
 
 @end
 
 
-@implementation ToDoList_ToDoListViewController
+@implementation TDLToDoListViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="89C-pE-36c">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="89C-pE-36c">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
-        <!--To Do List To Do List View Controller - My to-do list-->
+        <!--To Do List View Controller - My to-do list-->
         <scene sceneID="qoV-2I-iOz">
             <objects>
-                <tableViewController id="XOJ-8X-nPE" customClass="ToDoList_ToDoListViewController" sceneMemberID="viewController">
+                <tableViewController id="XOJ-8X-nPE" customClass="TDLToDoListViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="LJX-mB-9t0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -307,10 +307,10 @@
             </objects>
             <point key="canvasLocation" x="376" y="-272"/>
         </scene>
-        <!--To Do List Add To Do Item View Controller - Add To-Do Item-->
+        <!--Add To Do Item View Controller - Add To-Do Item-->
         <scene sceneID="361-g3-hYV">
             <objects>
-                <viewController id="AO7-Ak-og1" customClass="ToDoList_AddToDoItemViewController" sceneMemberID="viewController">
+                <viewController id="AO7-Ak-og1" customClass="TDLAddToDoItemViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="unt-Ff-jMx"/>
                         <viewControllerLayoutGuide type="bottom" id="cea-cO-wSj"/>

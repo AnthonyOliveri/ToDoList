@@ -6,13 +6,13 @@
 //  Copyright (c) 2013 Anthony Oliveri. All rights reserved.
 //
 
-#import "ToDoList_AddToDoItemViewController.h"
+#import "TDLAddToDoItemViewController.h"
 
-@interface ToDoList_AddToDoItemViewController ()
+@interface TDLAddToDoItemViewController ()
 
 @end
 
-@implementation ToDoList_AddToDoItemViewController
+@implementation TDLAddToDoItemViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

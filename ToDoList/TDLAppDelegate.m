@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Anthony Oliveri. All rights reserved.
 //
 
-#import "ToDoList_AppDelegate.h"
+#import "TDLAppDelegate.h"
 
-@implementation ToDoList_AppDelegate
+@implementation TDLAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
