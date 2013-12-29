@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BF2169E418692D7C009D55DF /* TDLAddToDoItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF2169E318692D7C009D55DF /* TDLAddToDoItemViewController.m */; };
 		BF2169E71869303F009D55DF /* TDLToDoListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF2169E61869303F009D55DF /* TDLToDoListViewController.m */; };
+		BF474691186BA1B500DB4A53 /* TDLToDoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = BF474690186BA1B500DB4A53 /* TDLToDoItem.m */; };
 		BF671F8A1867F513002D373F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BF9616D11867E51E002C6A7A /* InfoPlist.strings */; };
 		BF9616C91867E51E002C6A7A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9616C81867E51E002C6A7A /* Foundation.framework */; };
 		BF9616CB1867E51E002C6A7A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9616CA1867E51E002C6A7A /* CoreGraphics.framework */; };
@@ -39,6 +40,8 @@
 		BF2169E318692D7C009D55DF /* TDLAddToDoItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDLAddToDoItemViewController.m; sourceTree = "<group>"; };
 		BF2169E51869303F009D55DF /* TDLToDoListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDLToDoListViewController.h; sourceTree = "<group>"; };
 		BF2169E61869303F009D55DF /* TDLToDoListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDLToDoListViewController.m; sourceTree = "<group>"; };
+		BF47468F186BA1B500DB4A53 /* TDLToDoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDLToDoItem.h; sourceTree = "<group>"; };
+		BF474690186BA1B500DB4A53 /* TDLToDoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDLToDoItem.m; sourceTree = "<group>"; };
 		BF9616C51867E51E002C6A7A /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF9616C81867E51E002C6A7A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BF9616CA1867E51E002C6A7A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -116,6 +119,8 @@
 			isa = PBXGroup;
 			children = (
 				BF9616D71867E51E002C6A7A /* TDLAppDelegate.h */,
+				BF47468F186BA1B500DB4A53 /* TDLToDoItem.h */,
+				BF474690186BA1B500DB4A53 /* TDLToDoItem.m */,
 				BF9616D81867E51E002C6A7A /* TDLAppDelegate.m */,
 				BF9616F71867E812002C6A7A /* Main.storyboard */,
 				BF2169E51869303F009D55DF /* TDLToDoListViewController.h */,
@@ -257,6 +262,7 @@
 				BF9616D91867E51E002C6A7A /* TDLAppDelegate.m in Sources */,
 				BF9616D51867E51E002C6A7A /* main.m in Sources */,
 				BF2169E71869303F009D55DF /* TDLToDoListViewController.m in Sources */,
+				BF474691186BA1B500DB4A53 /* TDLToDoItem.m in Sources */,
 				BF2169E418692D7C009D55DF /* TDLAddToDoItemViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -379,7 +385,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ToDoList/ToDoList-Prefix.pch";
 				INFOPLIST_FILE = "ToDoList/ToDoList-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -392,7 +400,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ToDoList/ToDoList-Prefix.pch";
 				INFOPLIST_FILE = "ToDoList/ToDoList-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
