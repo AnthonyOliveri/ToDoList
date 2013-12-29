@@ -8,6 +8,7 @@
 
 #import "TDLToDoListViewController.h"
 #import "TDLToDoItem.h"
+#import "TDLAddToDoItemViewController.h"
 
 @interface TDLToDoListViewController ()
 
@@ -41,6 +42,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+
 -(void)loadInitialData
 {
     TDLToDoItem *item1 = [[TDLToDoItem alloc] init];
@@ -59,7 +61,13 @@
 
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
-    
+    TDLAddToDoItemViewController *source = [segue sourceViewController];
+    TDLToDoItem *item = source.toDoItem;
+    if(item != nil)
+    {
+        [self.toDoItems addObject:item];
+        [self.tableView reloadData];
+    }
 }
 
 
