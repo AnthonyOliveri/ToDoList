@@ -13,4 +13,6 @@
 
 @property TDLToDoItem *toDoItem;
 
+-(IBAction)saveNewItem:(id)sender;
+
 @end
