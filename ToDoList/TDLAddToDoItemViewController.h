@@ -8,11 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "TDLToDoItem.h"
+#import "TDLAppDelegate.h"
 
 @interface TDLAddToDoItemViewController : UIViewController
 
 @property TDLToDoItem *toDoItem;
-
--(IBAction)saveNewItem:(id)sender;
 
 @end

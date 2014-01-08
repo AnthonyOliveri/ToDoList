@@ -43,22 +43,29 @@
 }
 
 
+// Fetch all the items stored in Documents/CoreData.sqlite and load them into the toDoItems array
 -(void)loadInitialData
 {
-    TDLToDoItem *item1 = [[TDLToDoItem alloc] init];
-    item1.itemName = @"Item 1";
-    [self.toDoItems addObject:item1];
-
-    TDLToDoItem *item2 = [[TDLToDoItem alloc] init];
-    item2.itemName = @"Item 2";
-    [self.toDoItems addObject:item2];
+    TDLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext:context];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
     
-    TDLToDoItem *item3 = [[TDLToDoItem alloc] init];
-    item3.itemName = @"Item 3";
-    [self.toDoItems addObject:item3];
+    NSError *error;
+    NSArray *toDoItemList = [context executeFetchRequest:request error:&error];
+    
+    for(NSManagedObject *itemObject in toDoItemList)
+    {
+        NSString *itemName = [itemObject valueForKey:@"itemName"];
+        TDLToDoItem *item = [[TDLToDoItem alloc] init];
+        item.itemName = itemName;
+        [self.toDoItems addObject:item];
+    }
 }
 
 
+// Extract the name of the newly created item and display it
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
     TDLAddToDoItemViewController *source = [segue sourceViewController];

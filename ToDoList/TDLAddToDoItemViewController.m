@@ -39,6 +39,9 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if(sender != self.doneButton) return;
+    
+    [self storeNewItem];
+    
     if(self.textField.text.length > 0)
     {
         self.toDoItem = [[TDLToDoItem alloc] init];
@@ -48,6 +51,22 @@
 }
 
 
+// Save the new item as a managed object in the Documents/CoreData.sqlite directory
+- (void)storeNewItem
+{
+    TDLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:context];
+    
+    [newItem setValue: _textField.text forKey:@"itemName"];
+    [newItem setValue:NO forKey:@"completed"];
+    [newItem setValue:[NSDate date] forKey:@"creationDate"];
+    
+    NSError *error;
+    [context save:&error];
+}
+    
+    
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
