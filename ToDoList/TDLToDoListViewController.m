@@ -46,14 +46,7 @@
 // Fetch all the items stored in Documents/CoreData.sqlite and load them into the toDoItems array
 -(void)loadInitialData
 {
-    TDLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext:context];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDesc];
-    
-    NSError *error;
-    NSArray *toDoItemList = [context executeFetchRequest:request error:&error];
+    NSArray *toDoItemList = [self getAllManagedObjects];
     
     for(NSManagedObject *itemObject in toDoItemList)
     {
@@ -62,6 +55,19 @@
         item.itemName = itemName;
         [self.toDoItems addObject:item];
     }
+}
+
+-(NSArray *)getAllManagedObjects
+{
+    TDLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext:context];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSError *error;
+    NSArray *toDoItemList = [context executeFetchRequest:request error:&error];
+    return toDoItemList;
 }
 
 
@@ -128,26 +134,47 @@
 }
 */
 
-/*
+
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        NSArray *toDoItemObjects = [self getAllManagedObjects];
+        int i = 0;
+        // Search for the stored item that matches the selected item
+        for(NSManagedObject *itemObject in toDoItemObjects)
+        {
+            TDLToDoItem *item = _toDoItems[indexPath.row];
+            NSString *currentItemName = item.itemName;
+            NSString *managedObjectName = [itemObject valueForKey:@"itemName"];
+            if([currentItemName isEqualToString: managedObjectName])    break;
+            i++;
+        }
+        TDLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSManagedObjectContext *context = [appDelegate managedObjectContext];
+        
+        [context deleteObject:toDoItemObjects[i]];
+        NSError *error;
+        [context save:&error];
+
+        [_toDoItems removeObjectAtIndex:indexPath.row];
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }   
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
-*/
+
 
 /*
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
 }
-*/
+ */
+
 
 /*
 // Override to support conditional rearranging of the table view.
@@ -157,6 +184,7 @@
     return YES;
 }
 */
+
 
 /*
 #pragma mark - Navigation
