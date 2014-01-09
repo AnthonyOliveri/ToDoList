@@ -33,17 +33,24 @@
                         </prototypes>
                         <sections/>
                         <connections>
-                            <outlet property="dataSource" destination="XOJ-8X-nPE" id="NNm-Ay-cjI"/>
                             <outlet property="delegate" destination="XOJ-8X-nPE" id="glE-zn-a2c"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="My to-do list" id="PUq-tj-50b">
+                        <barButtonItem key="leftBarButtonItem" title="Edit" id="uew-Xt-ULe">
+                            <connections>
+                                <action selector="enterEditMode:" destination="XOJ-8X-nPE" id="y6x-aV-10i"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="BWy-XK-IUb">
                             <connections>
                                 <segue destination="hpo-SL-o35" kind="modal" id="JHu-mA-dIq"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="editButton" destination="uew-Xt-ULe" id="AKu-XC-fST"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6UB-Ly-ax0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

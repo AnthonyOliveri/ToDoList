@@ -11,6 +11,7 @@
 @interface TDLToDoListViewController ()
 
 @property TDLAppDelegate *appDelegate;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 
 @end
 
@@ -36,14 +37,11 @@
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    //self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 
 // Fetch all the items stored in Documents/CoreData.sqlite and load them into the toDoItems array
--(void)loadInitialData
+- (void)loadInitialData
 {
     [self loadManagedObjects];
     
@@ -57,7 +55,7 @@
     }
 }
 
--(void)loadManagedObjects
+- (void)loadManagedObjects
 {
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext: self.appDelegate.managedObjectContext];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -124,6 +122,20 @@
 }
 
 
+- (IBAction)enterEditMode:(id)sender
+{
+    if ([self.tableView isEditing])
+    {
+        [self.tableView setEditing:NO animated:YES];
+        [self.editButton setTitle:@"Edit"];
+    }
+    else
+    {
+        [self.tableView setEditing:YES animated:YES];
+        [self.editButton setTitle:@"Done"];
+    }
+}
+
 
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -169,12 +181,13 @@
 }
 
 
-/*
+
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
+    
 }
- */
+
 
 
 
@@ -203,7 +216,7 @@
 #pragma mark - Table view delegate
 
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     TDLToDoItem *tappedItem = [self.toDoItems objectAtIndex:indexPath.row];
