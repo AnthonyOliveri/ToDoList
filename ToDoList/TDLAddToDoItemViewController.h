@@ -13,5 +13,8 @@
 @interface TDLAddToDoItemViewController : UIViewController
 
 @property TDLToDoItem *toDoItem;
+@property (weak, nonatomic) IBOutlet UITextField *textField;
+
+-(IBAction)textFieldReturn:(id)sender;
 
 @end

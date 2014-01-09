@@ -10,9 +10,8 @@
 
 @interface TDLAddToDoItemViewController ()
 
-@property (weak, nonatomic) IBOutlet UITextField *textField;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property TDLAppDelegate *appDelegate;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 
 @end
 
@@ -33,7 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    [self.textField becomeFirstResponder];
 }
 
 
@@ -41,10 +40,10 @@
 {
     if(sender != self.doneButton) return;
     
-    [self storeNewItem];
-    
     if(self.textField.text.length > 0)
     {
+        [self storeNewItem];
+        
         self.toDoItem = [[TDLToDoItem alloc] init];
         self.toDoItem.itemName = self.textField.text;
         self.toDoItem.completed = NO;
@@ -58,7 +57,7 @@
     self.appDelegate = [[UIApplication sharedApplication] delegate];
     NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
     
-    [newItem setValue: _textField.text forKey:@"itemName"];
+    [newItem setValue: self.textField.text forKey:@"itemName"];
     [newItem setValue:[NSNumber numberWithBool:NO] forKey:@"completed"];
     [newItem setValue:[NSDate date] forKey:@"creationDate"];
     
@@ -68,6 +67,13 @@
         NSLog(@"Cannot store item: %@, %@", error, [error localizedDescription]);
         return;
     }
+}
+
+
+// Make done button on keyboard dismiss the keyboard
+-(IBAction)textFieldReturn:(id)sender
+{
+    [sender resignFirstResponder];
 }
     
     

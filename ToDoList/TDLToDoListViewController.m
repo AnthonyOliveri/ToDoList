@@ -10,8 +10,6 @@
 
 @interface TDLToDoListViewController ()
 
-@property NSMutableArray *toDoItems;    // tableView items
-@property NSArray *toDoItemObjects;     // managed objects from persistent store
 @property TDLAppDelegate *appDelegate;
 
 @end
@@ -40,7 +38,7 @@
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    //self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 
@@ -56,7 +54,6 @@
         item.completed = [[itemObject valueForKey:@"completed"] boolValue];
         item.creationDate = [itemObject valueForKey:@"creationDate"];
         [self.toDoItems addObject:item];
-        NSLog(@"COMPLETED = %d", item.completed);
     }
 }
 
@@ -180,14 +177,14 @@
  */
 
 
-/*
+
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the item to be re-orderable.
     return YES;
 }
-*/
+
 
 
 /*
@@ -226,7 +223,6 @@
     
     NSNumber *completed = [NSNumber numberWithBool:tappedItem.completed];
     [self.toDoItemObjects[i] setValue:completed forKey:@"completed"];
-    NSLog(@"completed number = %@", completed);
     NSError *error;
     if(![self.appDelegate.managedObjectContext save:&error])
     {
