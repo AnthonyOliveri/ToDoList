@@ -51,10 +51,12 @@
     
     for(NSManagedObject *itemObject in self.toDoItemObjects)
     {
-        NSString *itemName = [itemObject valueForKey:@"itemName"];
         TDLToDoItem *item = [[TDLToDoItem alloc] init];
-        item.itemName = itemName;
+        item.itemName = [itemObject valueForKey:@"itemName"];
+        item.completed = [[itemObject valueForKey:@"completed"] boolValue];
+        item.creationDate = [itemObject valueForKey:@"creationDate"];
         [self.toDoItems addObject:item];
+        NSLog(@"COMPLETED = %d", item.completed);
     }
 }
 
@@ -66,7 +68,6 @@
     
     NSError *error;
     self.toDoItemObjects = [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
-    NSLog(@"NUM OBJECTS = %lu", [self.toDoItemObjects count]);
 }
 
 
@@ -126,14 +127,14 @@
 }
 
 
-/*
+
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
     return YES;
 }
-*/
+
 
 
 // Override to support editing the table view.
@@ -141,8 +142,9 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        int i = 0;
         // Search for the stored item that matches the selected item
+        //// Consider replacing for loop with a context predicate
+        int i = 0;
         for(NSManagedObject *itemObject in self.toDoItemObjects)
         {
             TDLToDoItem *item = self.toDoItems[indexPath.row];
@@ -153,8 +155,12 @@
         }
         
         [self.appDelegate.managedObjectContext deleteObject:self.toDoItemObjects[i]];
-        NSError *error;
-        [self.appDelegate.managedObjectContext save:&error];
+        NSError *error = nil;
+        if(![self.appDelegate.managedObjectContext save:&error])
+        {
+            NSLog(@"Cannot delete item: %@, %@", error, [error localizedDescription]);
+            return;
+        };
 
         [self.toDoItems removeObjectAtIndex:indexPath.row];
         
@@ -205,6 +211,29 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     TDLToDoItem *tappedItem = [self.toDoItems objectAtIndex:indexPath.row];
     tappedItem.completed = !tappedItem.completed;
+    
+    // Search for the stored item that matches the selected item
+    //// Consider replacing for loop with a context predicate
+    int i = 0;
+    for(NSManagedObject *itemObject in self.toDoItemObjects)
+    {
+        TDLToDoItem *item = self.toDoItems[indexPath.row];
+        NSString *currentItemName = item.itemName;
+        NSString *managedObjectName = [itemObject valueForKey:@"itemName"];
+        if([currentItemName isEqualToString: managedObjectName])    break;
+        i++;
+    }
+    
+    NSNumber *completed = [NSNumber numberWithBool:tappedItem.completed];
+    [self.toDoItemObjects[i] setValue:completed forKey:@"completed"];
+    NSLog(@"completed number = %@", completed);
+    NSError *error;
+    if(![self.appDelegate.managedObjectContext save:&error])
+    {
+        NSLog(@"Cannot update item completion: %@, %@", error, [error localizedDescription]);
+        return;
+    }
+    
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }
 

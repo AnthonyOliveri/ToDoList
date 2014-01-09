@@ -12,6 +12,6 @@
 
 @property NSString *itemName;
 @property bool completed;
-@property (readonly) NSDate *creationDate;
+@property NSDate *creationDate;
 
 @end

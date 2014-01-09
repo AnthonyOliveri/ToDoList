@@ -59,11 +59,15 @@
     NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
     
     [newItem setValue: _textField.text forKey:@"itemName"];
-    [newItem setValue:NO forKey:@"completed"];
+    [newItem setValue:[NSNumber numberWithBool:NO] forKey:@"completed"];
     [newItem setValue:[NSDate date] forKey:@"creationDate"];
     
     NSError *error;
-    [self.appDelegate.managedObjectContext save:&error];
+    if(![self.appDelegate.managedObjectContext save:&error])
+    {
+        NSLog(@"Cannot store item: %@, %@", error, [error localizedDescription]);
+        return;
+    }
 }
     
     
