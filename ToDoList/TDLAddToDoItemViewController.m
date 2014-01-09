@@ -12,6 +12,7 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
+@property TDLAppDelegate *appDelegate;
 
 @end
 
@@ -54,16 +55,15 @@
 // Save the new item as a managed object in the Documents/CoreData.sqlite directory
 - (void)storeNewItem
 {
-    TDLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:context];
+    self.appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
     
     [newItem setValue: _textField.text forKey:@"itemName"];
     [newItem setValue:NO forKey:@"completed"];
     [newItem setValue:[NSDate date] forKey:@"creationDate"];
     
     NSError *error;
-    [context save:&error];
+    [self.appDelegate.managedObjectContext save:&error];
 }
     
     

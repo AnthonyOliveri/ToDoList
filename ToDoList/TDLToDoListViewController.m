@@ -7,12 +7,12 @@
 //
 
 #import "TDLToDoListViewController.h"
-#import "TDLToDoItem.h"
-#import "TDLAddToDoItemViewController.h"
 
 @interface TDLToDoListViewController ()
 
-@property NSMutableArray *toDoItems;
+@property NSMutableArray *toDoItems;    // tableView items
+@property NSArray *toDoItemObjects;     // managed objects from persistent store
+@property TDLAppDelegate *appDelegate;
 
 @end
 
@@ -33,6 +33,7 @@
 {
     [super viewDidLoad];
     self.toDoItems = [[NSMutableArray alloc] init];
+    self.appDelegate = [[UIApplication sharedApplication] delegate];
     [self loadInitialData];
 
     // Uncomment the following line to preserve selection between presentations.
@@ -46,9 +47,9 @@
 // Fetch all the items stored in Documents/CoreData.sqlite and load them into the toDoItems array
 -(void)loadInitialData
 {
-    NSArray *toDoItemList = [self getAllManagedObjects];
+    [self loadManagedObjects];
     
-    for(NSManagedObject *itemObject in toDoItemList)
+    for(NSManagedObject *itemObject in self.toDoItemObjects)
     {
         NSString *itemName = [itemObject valueForKey:@"itemName"];
         TDLToDoItem *item = [[TDLToDoItem alloc] init];
@@ -57,23 +58,23 @@
     }
 }
 
--(NSArray *)getAllManagedObjects
+-(void)loadManagedObjects
 {
-    TDLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext:context];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext: self.appDelegate.managedObjectContext];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     
     NSError *error;
-    NSArray *toDoItemList = [context executeFetchRequest:request error:&error];
-    return toDoItemList;
+    self.toDoItemObjects = [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"NUM OBJECTS = %lu", [self.toDoItemObjects count]);
 }
 
 
 // Extract the name of the newly created item and display it
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
+    [self loadManagedObjects];
+    
     TDLAddToDoItemViewController *source = [segue sourceViewController];
     TDLToDoItem *item = source.toDoItem;
     if(item != nil)
@@ -140,25 +141,22 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        NSArray *toDoItemObjects = [self getAllManagedObjects];
         int i = 0;
         // Search for the stored item that matches the selected item
-        for(NSManagedObject *itemObject in toDoItemObjects)
+        for(NSManagedObject *itemObject in self.toDoItemObjects)
         {
-            TDLToDoItem *item = _toDoItems[indexPath.row];
+            TDLToDoItem *item = self.toDoItems[indexPath.row];
             NSString *currentItemName = item.itemName;
             NSString *managedObjectName = [itemObject valueForKey:@"itemName"];
             if([currentItemName isEqualToString: managedObjectName])    break;
             i++;
         }
-        TDLAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *context = [appDelegate managedObjectContext];
         
-        [context deleteObject:toDoItemObjects[i]];
+        [self.appDelegate.managedObjectContext deleteObject:self.toDoItemObjects[i]];
         NSError *error;
-        [context save:&error];
+        [self.appDelegate.managedObjectContext save:&error];
 
-        [_toDoItems removeObjectAtIndex:indexPath.row];
+        [self.toDoItems removeObjectAtIndex:indexPath.row];
         
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }   
