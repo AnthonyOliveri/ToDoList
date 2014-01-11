@@ -66,7 +66,9 @@
     [request setEntity:entityDesc];
     
     NSError *error;
-    return [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *unorderedItems =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"listPosition" ascending:YES]];
+    return [unorderedItems sortedArrayUsingDescriptors:descriptors];
 }
 
 
@@ -160,56 +162,78 @@
             i++;
         }
         
+        // Decrement the list position of all items that will move up the list
+        for(int j = i + 1; j < [self.toDoItemObjects count]; j++)
+        {
+            NSNumber *newPosition = [NSNumber numberWithInteger:(j - 1)];
+            [self.toDoItemObjects[j] setValue:newPosition forKey:@"listPosition"];
+        }
+        
+        // Delete the object
         [self.appDelegate.managedObjectContext deleteObject:self.toDoItemObjects[i]];
         [self.appDelegate saveContext];
-
-        [self.toDoItems removeObjectAtIndex:indexPath.row];
+        self.toDoItemObjects = [self loadManagedObjects];
         
+        [self.toDoItems removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
+        [tableView reloadData];
+    }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
 
 
-// Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the item to be re-orderable.
     return YES;
 }
 
 
-// Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    id object = [self.toDoItems objectAtIndex:fromIndexPath.row];
-    [self.toDoItems removeObjectAtIndex:fromIndexPath.row];
-    
     // Find the item in store
     int i = 0;
     for(NSManagedObject *itemObject in self.toDoItemObjects)
     {
+        NSLog(@"list position of %d = %@", i, [itemObject valueForKey:@"listPosition"]);
         if([[itemObject valueForKey:@"listPosition"] integerValue] == fromIndexPath.row)    break;
         i++;
     }
-    //// Finish adding support to row movement
-    //// After committing, get rid of toDoItems and just use toDoItemsObjects
     
+    
+    id object = [self.toDoItems objectAtIndex:fromIndexPath.row];
+    [self.toDoItems removeObjectAtIndex:fromIndexPath.row];
+    
+    NSNumber *newPosition;
     if(fromIndexPath < toIndexPath)
     {
         [self.toDoItems insertObject:object atIndex:(toIndexPath.row - 1)];
-        NSNumber *newPosition = [NSNumber numberWithInteger:(toIndexPath.row - 1)];
-        [self.toDoItemObjects[i] setValue:newPosition forKey:@"listPosition"];
+        
+        // Update the list position of all item model objects
+        for(long j = fromIndexPath.row + 1; j <= toIndexPath.row; j++)
+        {
+            newPosition = [NSNumber numberWithInteger:(j - 1)];
+            [self.toDoItemObjects[j] setValue:newPosition forKey:@"listPosition"];
+        }
     }
-    else
+    else if(fromIndexPath > toIndexPath)
     {
         [self.toDoItems insertObject:object atIndex:toIndexPath.row];
-        NSNumber *newPosition = [NSNumber numberWithInteger:toIndexPath.row];
-        [self.toDoItemObjects[i] setValue:newPosition forKey:@"listPosition"];
+        
+        // Update the list position of all item model objects
+        for(long j = toIndexPath.row; j < fromIndexPath.row; j++)
+        {
+            newPosition = [NSNumber numberWithInteger:(j + 1)];
+            [self.toDoItemObjects[j] setValue:newPosition forKey:@"listPosition"];
+        }
     }
+    newPosition = [NSNumber numberWithInteger:toIndexPath.row];
+    [self.toDoItemObjects[i] setValue:newPosition forKey:@"listPosition"];
+    
     [self.appDelegate saveContext];
+    self.toDoItemObjects = [self loadManagedObjects];
+    [tableView reloadData];
 }
 
 
@@ -242,6 +266,7 @@
         if([[itemObject valueForKey:@"listPosition"] integerValue] == indexPath.row)    break;
         i++;
     }
+
     
     NSNumber *completed = [NSNumber numberWithBool:tappedItem.completed];
     [self.toDoItemObjects[i] setValue:completed forKey:@"completed"];
