@@ -208,7 +208,7 @@
     NSNumber *newPosition;
     if(fromIndexPath < toIndexPath)
     {
-        [self.toDoItems insertObject:object atIndex:(toIndexPath.row - 1)];
+        [self.toDoItems insertObject:object atIndex:toIndexPath.row];
         
         // Update the list position of all item model objects
         for(long j = fromIndexPath.row + 1; j <= toIndexPath.row; j++)
