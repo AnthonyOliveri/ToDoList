@@ -32,6 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.appDelegate = [[UIApplication sharedApplication] delegate];
     [self.textField becomeFirstResponder];
 }
 
@@ -43,30 +44,31 @@
     if(self.textField.text.length > 0)
     {
         [self storeNewItem];
-        
-        self.toDoItem = [[TDLToDoItem alloc] init];
-        self.toDoItem.itemName = self.textField.text;
-        self.toDoItem.completed = NO;
     }
 }
 
 
 // Save the new item as a managed object in the Documents/CoreData.sqlite directory
+// Create a toDoItem which will be sent to TDLToDoListViewController
 - (void)storeNewItem
 {
-    self.appDelegate = [[UIApplication sharedApplication] delegate];
     NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
     
-    [newItem setValue: self.textField.text forKey:@"itemName"];
+    
+    TDLToDoListViewController *toDoListVC = [self.navigationController.viewControllers objectAtIndex:0];
+    NSNumber *last = [NSNumber numberWithUnsignedInteger:[toDoListVC.toDoItemObjects count]];
+    
+    [newItem setValue:self.textField.text forKey:@"itemName"];
     [newItem setValue:[NSNumber numberWithBool:NO] forKey:@"completed"];
     [newItem setValue:[NSDate date] forKey:@"creationDate"];
+    [newItem setValue:last forKey:@"listPosition"];
     
-    NSError *error;
-    if(![self.appDelegate.managedObjectContext save:&error])
-    {
-        NSLog(@"Cannot store item: %@, %@", error, [error localizedDescription]);
-        return;
-    }
+    [self.appDelegate saveContext];
+    
+    self.toDoItem = [[TDLToDoItem alloc] init];
+    self.toDoItem.itemName = self.textField.text;
+    self.toDoItem.completed = NO;
+    self.toDoItem.listPosition = last;
 }
 
 

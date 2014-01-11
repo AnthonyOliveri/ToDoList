@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "TDLToDoItem.h"
 #import "TDLAppDelegate.h"
+#import "TDLToDoListViewController.h"
 
 @interface TDLAddToDoItemViewController : UIViewController
 
-@property TDLToDoItem *toDoItem;
+@property TDLToDoItem *toDoItem;    // New item to add to the list
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 
 -(IBAction)textFieldReturn:(id)sender;

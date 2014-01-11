@@ -43,7 +43,7 @@
 // Fetch all the items stored in Documents/CoreData.sqlite and load them into the toDoItems array
 - (void)loadInitialData
 {
-    [self loadManagedObjects];
+    self.toDoItemObjects = [self loadManagedObjects];
     
     for(NSManagedObject *itemObject in self.toDoItemObjects)
     {
@@ -51,25 +51,29 @@
         item.itemName = [itemObject valueForKey:@"itemName"];
         item.completed = [[itemObject valueForKey:@"completed"] boolValue];
         item.creationDate = [itemObject valueForKey:@"creationDate"];
+        item.listPosition = [itemObject valueForKey:@"listPosition"];
         [self.toDoItems addObject:item];
     }
+    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"listPosition" ascending:YES]];
+    [self.toDoItems sortUsingDescriptors:descriptors];
 }
 
-- (void)loadManagedObjects
+
+- (NSArray *)loadManagedObjects
 {
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext: self.appDelegate.managedObjectContext];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     
     NSError *error;
-    self.toDoItemObjects = [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    return [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
 }
 
 
 // Extract the name of the newly created item and display it
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
-    [self loadManagedObjects];
+    self.toDoItemObjects = [self loadManagedObjects];
     
     TDLAddToDoItemViewController *source = [segue sourceViewController];
     TDLToDoItem *item = source.toDoItem;
@@ -137,13 +141,10 @@
 }
 
 
-// Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
     return YES;
 }
-
 
 
 // Override to support editing the table view.
@@ -151,25 +152,16 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        // Search for the stored item that matches the selected item
-        //// Consider replacing for loop with a context predicate
+        // Find the item in store
         int i = 0;
         for(NSManagedObject *itemObject in self.toDoItemObjects)
         {
-            TDLToDoItem *item = self.toDoItems[indexPath.row];
-            NSString *currentItemName = item.itemName;
-            NSString *managedObjectName = [itemObject valueForKey:@"itemName"];
-            if([currentItemName isEqualToString: managedObjectName])    break;
+            if([[itemObject valueForKey:@"listPosition"] integerValue] == indexPath.row)    break;
             i++;
         }
         
         [self.appDelegate.managedObjectContext deleteObject:self.toDoItemObjects[i]];
-        NSError *error = nil;
-        if(![self.appDelegate.managedObjectContext save:&error])
-        {
-            NSLog(@"Cannot delete item: %@, %@", error, [error localizedDescription]);
-            return;
-        };
+        [self.appDelegate saveContext];
 
         [self.toDoItems removeObjectAtIndex:indexPath.row];
         
@@ -181,16 +173,6 @@
 }
 
 
-
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-    
-}
-
-
-
-
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -198,6 +180,37 @@
     return YES;
 }
 
+
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
+    id object = [self.toDoItems objectAtIndex:fromIndexPath.row];
+    [self.toDoItems removeObjectAtIndex:fromIndexPath.row];
+    
+    // Find the item in store
+    int i = 0;
+    for(NSManagedObject *itemObject in self.toDoItemObjects)
+    {
+        if([[itemObject valueForKey:@"listPosition"] integerValue] == fromIndexPath.row)    break;
+        i++;
+    }
+    //// Finish adding support to row movement
+    //// After committing, get rid of toDoItems and just use toDoItemsObjects
+    
+    if(fromIndexPath < toIndexPath)
+    {
+        [self.toDoItems insertObject:object atIndex:(toIndexPath.row - 1)];
+        NSNumber *newPosition = [NSNumber numberWithInteger:(toIndexPath.row - 1)];
+        [self.toDoItemObjects[i] setValue:newPosition forKey:@"listPosition"];
+    }
+    else
+    {
+        [self.toDoItems insertObject:object atIndex:toIndexPath.row];
+        NSNumber *newPosition = [NSNumber numberWithInteger:toIndexPath.row];
+        [self.toDoItemObjects[i] setValue:newPosition forKey:@"listPosition"];
+    }
+    [self.appDelegate saveContext];
+}
 
 
 /*
@@ -222,26 +235,17 @@
     TDLToDoItem *tappedItem = [self.toDoItems objectAtIndex:indexPath.row];
     tappedItem.completed = !tappedItem.completed;
     
-    // Search for the stored item that matches the selected item
-    //// Consider replacing for loop with a context predicate
+    // Find the item in store
     int i = 0;
     for(NSManagedObject *itemObject in self.toDoItemObjects)
     {
-        TDLToDoItem *item = self.toDoItems[indexPath.row];
-        NSString *currentItemName = item.itemName;
-        NSString *managedObjectName = [itemObject valueForKey:@"itemName"];
-        if([currentItemName isEqualToString: managedObjectName])    break;
+        if([[itemObject valueForKey:@"listPosition"] integerValue] == indexPath.row)    break;
         i++;
     }
     
     NSNumber *completed = [NSNumber numberWithBool:tappedItem.completed];
     [self.toDoItemObjects[i] setValue:completed forKey:@"completed"];
-    NSError *error;
-    if(![self.appDelegate.managedObjectContext save:&error])
-    {
-        NSLog(@"Cannot update item completion: %@, %@", error, [error localizedDescription]);
-        return;
-    }
+    [self.appDelegate saveContext];
     
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
 }

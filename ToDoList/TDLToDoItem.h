@@ -13,5 +13,6 @@
 @property NSString *itemName;
 @property bool completed;
 @property NSDate *creationDate;
+@property NSNumber *listPosition;
 
 @end
