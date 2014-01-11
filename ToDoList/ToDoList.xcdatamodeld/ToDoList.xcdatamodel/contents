@@ -6,7 +6,11 @@
         <attribute name="itemName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="listPosition" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>
+    <entity name="ToDoList" syncable="YES">
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
         <element name="ToDoItem" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ToDoList" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

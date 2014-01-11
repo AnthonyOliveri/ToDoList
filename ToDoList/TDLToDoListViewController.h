@@ -13,5 +13,6 @@
 
 @property NSMutableArray *toDoItems;    // tableView items
 @property NSArray *toDoItemObjects;     // managed objects from persistent store
+@property NSArray *toDoListObjects;     // managed
 
 @end

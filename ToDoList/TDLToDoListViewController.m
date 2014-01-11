@@ -12,6 +12,8 @@
 
 @property TDLAppDelegate *appDelegate;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
+@property (weak, nonatomic) IBOutlet UITextField *listTitle;
+
 
 @end
 
@@ -43,7 +45,9 @@
 // Fetch all the items stored in Documents/CoreData.sqlite and load them into the toDoItems array
 - (void)loadInitialData
 {
-    self.toDoItemObjects = [self loadManagedObjects];
+    [self loadListData];
+    
+    self.toDoItemObjects = [self loadItemObjects];
     
     for(NSManagedObject *itemObject in self.toDoItemObjects)
     {
@@ -59,7 +63,7 @@
 }
 
 
-- (NSArray *)loadManagedObjects
+- (NSArray *)loadItemObjects
 {
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext: self.appDelegate.managedObjectContext];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -72,10 +76,33 @@
 }
 
 
+-(void)loadListData
+{
+    //// TO DO: clean this shit up
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoList" inManagedObjectContext: self.appDelegate.managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSError *error;
+    self.toDoListObjects =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    
+    if([self.toDoListObjects count] == 0)
+    {
+        NSManagedObject *newList = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoList" inManagedObjectContext:self.appDelegate.managedObjectContext];
+        [newList setValue:@"My To-Do List" forKey:@"title"];
+    }
+    [self.appDelegate saveContext];
+    
+    self.toDoListObjects =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    
+    self.listTitle.text = [self.toDoListObjects[0] valueForKey:@"title"];
+}
+
+
 // Extract the name of the newly created item and display it
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
-    self.toDoItemObjects = [self loadManagedObjects];
+    self.toDoItemObjects = [self loadItemObjects];
     
     TDLAddToDoItemViewController *source = [segue sourceViewController];
     TDLToDoItem *item = source.toDoItem;
@@ -130,11 +157,13 @@
 
 - (IBAction)enterEditMode:(id)sender
 {
+    // Get out of editing mode
     if ([self.tableView isEditing])
     {
         [self.tableView setEditing:NO animated:YES];
         [self.editButton setTitle:@"Edit"];
     }
+    // Enter editing mode
     else
     {
         [self.tableView setEditing:YES animated:YES];
@@ -172,7 +201,7 @@
         // Delete the object
         [self.appDelegate.managedObjectContext deleteObject:self.toDoItemObjects[i]];
         [self.appDelegate saveContext];
-        self.toDoItemObjects = [self loadManagedObjects];
+        self.toDoItemObjects = [self loadItemObjects];
         
         [self.toDoItems removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -196,7 +225,6 @@
     int i = 0;
     for(NSManagedObject *itemObject in self.toDoItemObjects)
     {
-        NSLog(@"list position of %d = %@", i, [itemObject valueForKey:@"listPosition"]);
         if([[itemObject valueForKey:@"listPosition"] integerValue] == fromIndexPath.row)    break;
         i++;
     }
@@ -232,7 +260,7 @@
     [self.toDoItemObjects[i] setValue:newPosition forKey:@"listPosition"];
     
     [self.appDelegate saveContext];
-    self.toDoItemObjects = [self loadManagedObjects];
+    self.toDoItemObjects = [self loadItemObjects];
     [tableView reloadData];
 }
 
@@ -273,6 +301,17 @@
     [self.appDelegate saveContext];
     
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+}
+
+
+- (IBAction)textFieldReturn:(id)sender
+{
+    // Save the title
+    [self.toDoListObjects[0] setValue:self.listTitle.text forKey:@"title"];
+    [self.appDelegate saveContext];
+    
+    // Dismiss the keyboard
+    [sender resignFirstResponder];
 }
 
 

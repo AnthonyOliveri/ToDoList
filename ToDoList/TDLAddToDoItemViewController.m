@@ -52,11 +52,10 @@
 // Create a toDoItem which will be sent to TDLToDoListViewController
 - (void)storeNewItem
 {
-    NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
-    
-    
     TDLToDoListViewController *toDoListVC = [self.navigationController.viewControllers objectAtIndex:0];
     NSNumber *last = [NSNumber numberWithUnsignedInteger:[toDoListVC.toDoItemObjects count]];
+ 
+    NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
     
     [newItem setValue:self.textField.text forKey:@"itemName"];
     [newItem setValue:[NSNumber numberWithBool:NO] forKey:@"completed"];

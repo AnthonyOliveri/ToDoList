@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
-        <!--To Do List View Controller - My to-do list-->
+        <!--To Do List View Controller-->
         <scene sceneID="qoV-2I-iOz">
             <objects>
                 <tableViewController id="XOJ-8X-nPE" customClass="TDLToDoListViewController" sceneMemberID="viewController">
@@ -36,12 +36,22 @@
                             <outlet property="delegate" destination="XOJ-8X-nPE" id="glE-zn-a2c"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="My to-do list" id="PUq-tj-50b">
+                    <navigationItem key="navigationItem" id="PUq-tj-50b">
+                        <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Edit" id="uew-Xt-ULe">
                             <connections>
                                 <action selector="enterEditMode:" destination="XOJ-8X-nPE" id="y6x-aV-10i"/>
                             </connections>
                         </barButtonItem>
+                        <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="My To-Do List" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="PRN-pc-r3Z">
+                            <rect key="frame" x="60" y="7" width="200" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="yes" returnKeyType="done"/>
+                            <connections>
+                                <action selector="textFieldReturn:" destination="XOJ-8X-nPE" eventType="editingDidEndOnExit" id="ovF-aq-cMi"/>
+                            </connections>
+                        </textField>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="BWy-XK-IUb">
                             <connections>
                                 <segue destination="AO7-Ak-og1" kind="push" id="33F-mW-9hR"/>
@@ -50,6 +60,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="editButton" destination="uew-Xt-ULe" id="AKu-XC-fST"/>
+                        <outlet property="listTitle" destination="PRN-pc-r3Z" id="SrP-zp-KxN"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6UB-Ly-ax0" userLabel="First Responder" sceneMemberID="firstResponder"/>
