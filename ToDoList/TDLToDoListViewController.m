@@ -47,7 +47,7 @@
 {
     [self loadListData];
     
-    self.toDoItemObjects = [self loadItemObjects];
+    self.toDoItemObjects = [self loadItemData];
     
     for(NSManagedObject *itemObject in self.toDoItemObjects)
     {
@@ -63,7 +63,7 @@
 }
 
 
-- (NSArray *)loadItemObjects
+- (NSArray *)loadItemData
 {
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext: self.appDelegate.managedObjectContext];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -78,31 +78,30 @@
 
 -(void)loadListData
 {
-    //// TO DO: clean this shit up
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoList" inManagedObjectContext: self.appDelegate.managedObjectContext];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     
     NSError *error;
-    self.toDoListObjects =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    self.toDoLists =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
     
-    if([self.toDoListObjects count] == 0)
+    // If this is the first time the app is launched, set list title to default
+    if([self.toDoLists count] == 0)
     {
         NSManagedObject *newList = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoList" inManagedObjectContext:self.appDelegate.managedObjectContext];
         [newList setValue:@"My To-Do List" forKey:@"title"];
     }
     [self.appDelegate saveContext];
     
-    self.toDoListObjects =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
-    
-    self.listTitle.text = [self.toDoListObjects[0] valueForKey:@"title"];
+    self.toDoLists =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    self.listTitle.text = [self.toDoLists[0] valueForKey:@"title"];
 }
 
 
 // Extract the name of the newly created item and display it
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
-    self.toDoItemObjects = [self loadItemObjects];
+    self.toDoItemObjects = [self loadItemData];
     
     TDLAddToDoItemViewController *source = [segue sourceViewController];
     TDLToDoItem *item = source.toDoItem;
@@ -183,25 +182,19 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        // Find the item in store
-        int i = 0;
-        for(NSManagedObject *itemObject in self.toDoItemObjects)
-        {
-            if([[itemObject valueForKey:@"listPosition"] integerValue] == indexPath.row)    break;
-            i++;
-        }
+        int itemIndex = [self findItemIndex:indexPath];
         
         // Decrement the list position of all items that will move up the list
-        for(int j = i + 1; j < [self.toDoItemObjects count]; j++)
+        for(int j = itemIndex + 1; j < [self.toDoItemObjects count]; j++)
         {
             NSNumber *newPosition = [NSNumber numberWithInteger:(j - 1)];
             [self.toDoItemObjects[j] setValue:newPosition forKey:@"listPosition"];
         }
         
         // Delete the object
-        [self.appDelegate.managedObjectContext deleteObject:self.toDoItemObjects[i]];
+        [self.appDelegate.managedObjectContext deleteObject:self.toDoItemObjects[itemIndex]];
         [self.appDelegate saveContext];
-        self.toDoItemObjects = [self loadItemObjects];
+        self.toDoItemObjects = [self loadItemData];
         
         [self.toDoItems removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -221,15 +214,6 @@
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    // Find the item in store
-    int i = 0;
-    for(NSManagedObject *itemObject in self.toDoItemObjects)
-    {
-        if([[itemObject valueForKey:@"listPosition"] integerValue] == fromIndexPath.row)    break;
-        i++;
-    }
-    
-    
     id object = [self.toDoItems objectAtIndex:fromIndexPath.row];
     [self.toDoItems removeObjectAtIndex:fromIndexPath.row];
     
@@ -257,10 +241,11 @@
         }
     }
     newPosition = [NSNumber numberWithInteger:toIndexPath.row];
-    [self.toDoItemObjects[i] setValue:newPosition forKey:@"listPosition"];
+    int itemIndex = [self findItemIndex:fromIndexPath];
+    [self.toDoItemObjects[itemIndex] setValue:newPosition forKey:@"listPosition"];
     
     [self.appDelegate saveContext];
-    self.toDoItemObjects = [self loadItemObjects];
+    self.toDoItemObjects = [self loadItemData];
     [tableView reloadData];
 }
 
@@ -286,18 +271,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     TDLToDoItem *tappedItem = [self.toDoItems objectAtIndex:indexPath.row];
     tappedItem.completed = !tappedItem.completed;
-    
-    // Find the item in store
-    int i = 0;
-    for(NSManagedObject *itemObject in self.toDoItemObjects)
-    {
-        if([[itemObject valueForKey:@"listPosition"] integerValue] == indexPath.row)    break;
-        i++;
-    }
-
-    
     NSNumber *completed = [NSNumber numberWithBool:tappedItem.completed];
-    [self.toDoItemObjects[i] setValue:completed forKey:@"completed"];
+    
+    int itemIndex = [self findItemIndex:indexPath];
+    [self.toDoItemObjects[itemIndex] setValue:completed forKey:@"completed"];
     [self.appDelegate saveContext];
     
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -307,11 +284,24 @@
 - (IBAction)textFieldReturn:(id)sender
 {
     // Save the title
-    [self.toDoListObjects[0] setValue:self.listTitle.text forKey:@"title"];
+    [self.toDoLists[0] setValue:self.listTitle.text forKey:@"title"];
     [self.appDelegate saveContext];
     
     // Dismiss the keyboard
     [sender resignFirstResponder];
+}
+
+
+// Find the item in the store
+- (int) findItemIndex:(NSIndexPath *)indexPath
+{
+    int i = 0;
+    for(NSManagedObject *itemObject in self.toDoItemObjects)
+    {
+        if([[itemObject valueForKey:@"listPosition"] integerValue] == indexPath.row)    break;
+        i++;
+    }
+    return i;
 }
 
 
