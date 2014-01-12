@@ -33,7 +33,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.toDoItems = [[NSMutableArray alloc] init];
     self.appDelegate = [[UIApplication sharedApplication] delegate];
     [self loadInitialData];
 
@@ -42,24 +41,11 @@
 }
 
 
-// Fetch all the items stored in Documents/CoreData.sqlite and load them into the toDoItems array
+// Fetch all the lists and items stored in Documents/CoreData.sqlite
 - (void)loadInitialData
 {
     [self loadListData];
-    
-    self.toDoItemObjects = [self loadItemData];
-    
-    for(NSManagedObject *itemObject in self.toDoItemObjects)
-    {
-        TDLToDoItem *item = [[TDLToDoItem alloc] init];
-        item.itemName = [itemObject valueForKey:@"itemName"];
-        item.completed = [[itemObject valueForKey:@"completed"] boolValue];
-        item.creationDate = [itemObject valueForKey:@"creationDate"];
-        item.listPosition = [itemObject valueForKey:@"listPosition"];
-        [self.toDoItems addObject:item];
-    }
-    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"listPosition" ascending:YES]];
-    [self.toDoItems sortUsingDescriptors:descriptors];
+    self.toDoItems = [self loadItemData];
 }
 
 
@@ -98,18 +84,12 @@
 }
 
 
-// Extract the name of the newly created item and display it
+// Reload items to get the newly entered item
+// Unwinds from TDLAddToDoItemViewController
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
-    self.toDoItemObjects = [self loadItemData];
-    
-    TDLAddToDoItemViewController *source = [segue sourceViewController];
-    TDLToDoItem *item = source.toDoItem;
-    if(item != nil)
-    {
-        [self.toDoItems addObject:item];
-        [self.tableView reloadData];
-    }
+    self.toDoItems = [self loadItemData];
+    [self.tableView reloadData];
 }
 
 
@@ -138,10 +118,11 @@
 {
     static NSString *CellIdentifier = @"ListPrototypeCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    TDLToDoItem *toDoItem = [self.toDoItems objectAtIndex:indexPath.row];
-    cell.textLabel.text = toDoItem.itemName;
+    NSManagedObject *toDoItem = [self.toDoItems objectAtIndex:[self findItemIndex:indexPath]];
+    cell.textLabel.text = [toDoItem valueForKey:@"itemName"];
     
-    if(toDoItem.completed)
+    bool completed = [[toDoItem valueForKey:@"completed"] boolValue];
+    if(completed)
     {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     }
@@ -185,18 +166,17 @@
         int itemIndex = [self findItemIndex:indexPath];
         
         // Decrement the list position of all items that will move up the list
-        for(int j = itemIndex + 1; j < [self.toDoItemObjects count]; j++)
+        for(int j = itemIndex + 1; j < [self.toDoItems count]; j++)
         {
             NSNumber *newPosition = [NSNumber numberWithInteger:(j - 1)];
-            [self.toDoItemObjects[j] setValue:newPosition forKey:@"listPosition"];
+            [self.toDoItems[j] setValue:newPosition forKey:@"listPosition"];
         }
         
         // Delete the object
-        [self.appDelegate.managedObjectContext deleteObject:self.toDoItemObjects[itemIndex]];
+        [self.appDelegate.managedObjectContext deleteObject:self.toDoItems[itemIndex]];
         [self.appDelegate saveContext];
-        self.toDoItemObjects = [self loadItemData];
+        self.toDoItems = [self loadItemData];
         
-        [self.toDoItems removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [tableView reloadData];
     }
@@ -214,38 +194,31 @@
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-    id object = [self.toDoItems objectAtIndex:fromIndexPath.row];
-    [self.toDoItems removeObjectAtIndex:fromIndexPath.row];
-    
     NSNumber *newPosition;
     if(fromIndexPath < toIndexPath)
     {
-        [self.toDoItems insertObject:object atIndex:toIndexPath.row];
-        
         // Update the list position of all item model objects
         for(long j = fromIndexPath.row + 1; j <= toIndexPath.row; j++)
         {
             newPosition = [NSNumber numberWithInteger:(j - 1)];
-            [self.toDoItemObjects[j] setValue:newPosition forKey:@"listPosition"];
+            [self.toDoItems[j] setValue:newPosition forKey:@"listPosition"];
         }
     }
     else if(fromIndexPath > toIndexPath)
     {
-        [self.toDoItems insertObject:object atIndex:toIndexPath.row];
-        
         // Update the list position of all item model objects
         for(long j = toIndexPath.row; j < fromIndexPath.row; j++)
         {
             newPosition = [NSNumber numberWithInteger:(j + 1)];
-            [self.toDoItemObjects[j] setValue:newPosition forKey:@"listPosition"];
+            [self.toDoItems[j] setValue:newPosition forKey:@"listPosition"];
         }
     }
     newPosition = [NSNumber numberWithInteger:toIndexPath.row];
     int itemIndex = [self findItemIndex:fromIndexPath];
-    [self.toDoItemObjects[itemIndex] setValue:newPosition forKey:@"listPosition"];
+    [self.toDoItems[itemIndex] setValue:newPosition forKey:@"listPosition"];
     
     [self.appDelegate saveContext];
-    self.toDoItemObjects = [self loadItemData];
+    self.toDoItems = [self loadItemData];
     [tableView reloadData];
 }
 
@@ -269,12 +242,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    TDLToDoItem *tappedItem = [self.toDoItems objectAtIndex:indexPath.row];
-    tappedItem.completed = !tappedItem.completed;
-    NSNumber *completed = [NSNumber numberWithBool:tappedItem.completed];
     
     int itemIndex = [self findItemIndex:indexPath];
-    [self.toDoItemObjects[itemIndex] setValue:completed forKey:@"completed"];
+    bool completed = [[self.toDoItems[itemIndex] valueForKey:@"completed"] boolValue];
+    NSNumber *isCompleted = [NSNumber numberWithBool:!completed];
+    
+    [self.toDoItems[itemIndex] setValue:isCompleted forKey:@"completed"];
     [self.appDelegate saveContext];
     
     [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -296,7 +269,7 @@
 - (int) findItemIndex:(NSIndexPath *)indexPath
 {
     int i = 0;
-    for(NSManagedObject *itemObject in self.toDoItemObjects)
+    for(NSManagedObject *itemObject in self.toDoItems)
     {
         if([[itemObject valueForKey:@"listPosition"] integerValue] == indexPath.row)    break;
         i++;

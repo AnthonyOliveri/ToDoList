@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TDLToDoItem.h"
 #import "TDLAddToDoItemViewController.h"
 #import "TDLToDoListViewController.h"
 

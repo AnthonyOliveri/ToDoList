@@ -53,21 +53,16 @@
 - (void)storeNewItem
 {
     TDLToDoListViewController *toDoListVC = [self.navigationController.viewControllers objectAtIndex:0];
-    NSNumber *last = [NSNumber numberWithUnsignedInteger:[toDoListVC.toDoItemObjects count]];
- 
+    NSNumber *last = [NSNumber numberWithUnsignedInteger:[toDoListVC.toDoItems count]];
+    
     NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
     
     [newItem setValue:self.textField.text forKey:@"itemName"];
-    [newItem setValue:[NSNumber numberWithBool:NO] forKey:@"completed"];
+    [newItem setValue:[NSNumber numberWithBool:false] forKey:@"completed"];
     [newItem setValue:[NSDate date] forKey:@"creationDate"];
     [newItem setValue:last forKey:@"listPosition"];
     
     [self.appDelegate saveContext];
-    
-    self.toDoItem = [[TDLToDoItem alloc] init];
-    self.toDoItem.itemName = self.textField.text;
-    self.toDoItem.completed = NO;
-    self.toDoItem.listPosition = last;
 }
 
 
