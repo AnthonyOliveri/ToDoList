@@ -85,11 +85,33 @@
 
 
 // Reload items to get the newly entered item
-// Unwinds from TDLAddToDoItemViewController
+// Unwinds from modal segue of TDLAddToDoItemViewController
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
-    self.toDoItems = [self loadItemData];
-    [self.tableView reloadData];
+    TDLAddToDoItemViewController *source = [segue sourceViewController];
+    NSString *newItemName = source.textField.text;
+    if([newItemName length] > 0)
+    {
+        [self storeNewItem:newItemName];
+        self.toDoItems = [self loadItemData];
+        [self.tableView reloadData];
+    }
+}
+
+
+// Save the new item as a managed object in the Documents/CoreData.sqlite directory
+- (void)storeNewItem:(NSString *)newItemName
+{
+    NSNumber *last = [NSNumber numberWithUnsignedInteger:[self.toDoItems count]];
+    
+    NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
+    
+    [newItem setValue:newItemName forKey:@"itemName"];
+    [newItem setValue:[NSNumber numberWithBool:false] forKey:@"completed"];
+    [newItem setValue:[NSDate date] forKey:@"creationDate"];
+    [newItem setValue:last forKey:@"listPosition"];
+    
+    [self.appDelegate saveContext];
 }
 
 

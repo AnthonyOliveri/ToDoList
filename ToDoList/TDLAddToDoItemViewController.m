@@ -40,29 +40,6 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if(sender != self.doneButton) return;
-    
-    if(self.textField.text.length > 0)
-    {
-        [self storeNewItem];
-    }
-}
-
-
-// Save the new item as a managed object in the Documents/CoreData.sqlite directory
-// Create a toDoItem which will be sent to TDLToDoListViewController
-- (void)storeNewItem
-{
-    TDLToDoListViewController *toDoListVC = [self.navigationController.viewControllers objectAtIndex:0];
-    NSNumber *last = [NSNumber numberWithUnsignedInteger:[toDoListVC.toDoItems count]];
-    
-    NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
-    
-    [newItem setValue:self.textField.text forKey:@"itemName"];
-    [newItem setValue:[NSNumber numberWithBool:false] forKey:@"completed"];
-    [newItem setValue:[NSDate date] forKey:@"creationDate"];
-    [newItem setValue:last forKey:@"listPosition"];
-    
-    [self.appDelegate saveContext];
 }
 
 
