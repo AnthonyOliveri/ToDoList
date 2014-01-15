@@ -12,6 +12,7 @@
 
 @property TDLAppDelegate *appDelegate;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
+- (IBAction)cancelAddItem:(id)sender;
 
 @end
 
@@ -57,4 +58,8 @@
 }
 
 
+- (IBAction)cancelAddItem:(id)sender
+{
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:Nil];
+}
 @end

@@ -8,9 +8,13 @@
 
 #import "TDLMasterListViewController.h"
 
+#define LISTS_SECTION 0
+#define ADD_LIST_SECTION 1
+
 @interface TDLMasterListViewController ()
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
+@property TDLAppDelegate *appDelegate;
 
 @end
 
@@ -28,12 +32,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.appDelegate = [[UIApplication sharedApplication] delegate];
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 // Reload items to get the newly entered item
@@ -53,24 +53,38 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    // Section 0 contains all the lists
+    // Section 1 is the Add List cell
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 1;
+    if (section == LISTS_SECTION)
+    {
+        return 1;
+    }
+    // ADD_LIST_SECTION
+    else
+    {
+        return 1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"ListPrototypeCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
-    return cell;
+    if (indexPath.section == LISTS_SECTION)
+    {
+        static NSString *CellIdentifier = @"ListPrototypeCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+        return cell;
+    }
+    // ADD_LIST_SECTION
+    {
+        static NSString *CellIdentifier = @"AddListPrototypeCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+        return cell;
+    }
 }
 
 /*
@@ -123,5 +137,15 @@
 }
 
  */
+
+
+#pragma mark - Table view delegate
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
 
 @end

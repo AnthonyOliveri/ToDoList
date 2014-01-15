@@ -30,6 +30,26 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddItemPrototypeCell" textLabel="1I1-qh-Pvd" style="IBUITableViewCellStyleDefault" id="SlT-16-HPR">
+                                <rect key="frame" x="0.0" y="130" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SlT-16-HPR" id="NRJ-SG-XbJ">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="+ Add Item" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1I1-qh-Pvd">
+                                            <rect key="frame" x="15" y="0.0" width="290" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                            <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="eSV-LY-TYj" kind="modal" id="Pdb-4o-W8c"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <sections/>
                         <connections>
@@ -37,11 +57,7 @@
                         </connections>
                     </tableView>
                     <toolbarItems>
-                        <barButtonItem title="Add Item" style="done" id="BWy-XK-IUb">
-                            <connections>
-                                <segue destination="eSV-LY-TYj" kind="modal" id="33F-mW-9hR"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem title="Add Item" style="done" id="BWy-XK-IUb"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="PUq-tj-50b">
                         <nil key="title"/>
@@ -59,14 +75,8 @@
                                 <action selector="textFieldReturn:" destination="XOJ-8X-nPE" eventType="editingDidEndOnExit" id="ovF-aq-cMi"/>
                             </connections>
                         </textField>
-                        <barButtonItem key="rightBarButtonItem" title="Edit" id="uew-Xt-ULe">
-                            <connections>
-                                <action selector="enterEditMode:" destination="XOJ-8X-nPE" id="y6x-aV-10i"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="editButton" destination="uew-Xt-ULe" id="AKu-XC-fST"/>
                         <outlet property="listTitle" destination="PRN-pc-r3Z" id="SrP-zp-KxN"/>
                     </connections>
                 </tableViewController>
@@ -108,7 +118,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Add To-Do Item" id="kDB-cF-B85">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="BCu-UF-EnY"/>
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="BCu-UF-EnY">
+                            <connections>
+                                <action selector="cancelAddItem:" destination="AO7-Ak-og1" id="GKW-T2-bng"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Done" id="7JT-EB-a5z">
                             <connections>
                                 <segue destination="Cwc-3G-TZp" kind="unwind" unwindAction="unwindToList:" id="DqM-cN-NHs"/>
@@ -154,6 +168,23 @@
                                     <segue destination="XOJ-8X-nPE" kind="push" id="tHo-an-FuA"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddListPrototypeCell" textLabel="co8-tB-jyT" style="IBUITableViewCellStyleDefault" id="6Ep-hA-CIB">
+                                <rect key="frame" x="0.0" y="130" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Ep-hA-CIB" id="U6U-2d-Ksm">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="+ Add List" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="co8-tB-jyT">
+                                            <rect key="frame" x="15" y="0.0" width="290" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                            <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="px4-B2-mG5" id="kYJ-rr-iaN"/>
@@ -163,19 +194,15 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="5Pk-Jx-Ksz">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" title="Edit" id="D4B-ol-Y7m"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="add" id="VhU-Qx-5pu"/>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="MASTER LIST" textAlignment="center" minimumFontSize="17" id="4yv-xg-OYf">
-                            <rect key="frame" x="96" y="7" width="128" height="30"/>
+                            <rect key="frame" x="93" y="7" width="134" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="VhU-Qx-5pu"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <connections>
-                        <outlet property="editButton" destination="D4B-ol-Y7m" id="JXo-oZ-0zw"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mdz-KV-q0x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

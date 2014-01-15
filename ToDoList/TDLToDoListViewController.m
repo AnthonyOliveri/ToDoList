@@ -8,10 +8,12 @@
 
 #import "TDLToDoListViewController.h"
 
+#define ITEMS_SECTION 0
+#define ADD_ITEM_SECTION 1
+
 @interface TDLToDoListViewController ()
 
 @property TDLAppDelegate *appDelegate;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 @property (weak, nonatomic) IBOutlet UITextField *listTitle;
 
 
@@ -34,10 +36,8 @@
 {
     [super viewDidLoad];
     self.appDelegate = [[UIApplication sharedApplication] delegate];
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
     [self loadInitialData];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
 }
 
 
@@ -126,34 +126,54 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    // Section 0 is the list of to-do items
+    // Section 1 is the Add Item cell
+    return 2;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.toDoItems count];
+    if (section == ITEMS_SECTION)
+    {
+        return [self.toDoItems count];
+    }
+    // ADD_ITEM_SECTION
+    else
+    {
+        return 1;
+    }
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"ItemPrototypeCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    NSManagedObject *toDoItem = [self.toDoItems objectAtIndex:[self findItemIndex:indexPath]];
-    cell.textLabel.text = [toDoItem valueForKey:@"itemName"];
-    
-    bool completed = [[toDoItem valueForKey:@"completed"] boolValue];
-    if(completed)
+    if(indexPath.section == ITEMS_SECTION)
     {
-        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        static NSString *CellIdentifier = @"ItemPrototypeCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+        NSManagedObject *toDoItem = [self.toDoItems objectAtIndex:[self findItemIndex:indexPath]];
+        cell.textLabel.text = [toDoItem valueForKey:@"itemName"];
+        
+        bool completed = [[toDoItem valueForKey:@"completed"] boolValue];
+        if(completed)
+        {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
+        else
+        {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+        }
+        
+        return cell;
     }
+    // ADD_ITEM_SECTION
     else
     {
-        cell.accessoryType = UITableViewCellAccessoryNone;
+        static NSString *CellIdentifier = @"AddItemPrototypeCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+        return cell;
     }
-    
-    return cell;
 }
 
 
@@ -163,20 +183,28 @@
     if ([self.tableView isEditing])
     {
         [self.tableView setEditing:NO animated:YES];
-        [self.editButton setTitle:@"Edit"];
+        [self.navigationItem.rightBarButtonItem setTitle:@"Edit"];
     }
     // Enter editing mode
     else
     {
         [self.tableView setEditing:YES animated:YES];
-        [self.editButton setTitle:@"Done"];
+        [self.navigationItem.rightBarButtonItem setTitle:@"Done"];
     }
 }
 
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return YES;
+    if (indexPath.section == ITEMS_SECTION)
+    {
+        return YES;
+    }
+    // ADD_ITEM_SECTION
+    else
+    {
+        return NO;
+    }
 }
 
 
@@ -263,6 +291,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section != ITEMS_SECTION) return;
+    
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     int itemIndex = [self findItemIndex:indexPath];
