@@ -216,6 +216,7 @@
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
+    int movedItemIndex = [self findItemIndex:fromIndexPath];
     NSNumber *newPosition;
     if(fromIndexPath < toIndexPath)
     {
@@ -236,8 +237,7 @@
         }
     }
     newPosition = [NSNumber numberWithInteger:toIndexPath.row];
-    int itemIndex = [self findItemIndex:fromIndexPath];
-    [self.toDoItems[itemIndex] setValue:newPosition forKey:@"listPosition"];
+    [self.toDoItems[movedItemIndex] setValue:newPosition forKey:@"listPosition"];
     
     [self.appDelegate saveContext];
     self.toDoItems = [self loadItemData];
