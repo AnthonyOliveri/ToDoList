@@ -6,4 +6,4 @@ https://developer.apple.com/library/ios/referencelibrary/GettingStarted/RoadMapi
 
 Currently, the app supports a single list. The list title can be edited, and items can be added, removed, reordered, and checked/unchecked as completed. 
 
-Future plans include adding support for multiple lists, and changing how items are added (possibly UIAlertView instead of a separate view controller).
+Future plans include adding support for multiple lists and upgrading the UI to make it prettier.
