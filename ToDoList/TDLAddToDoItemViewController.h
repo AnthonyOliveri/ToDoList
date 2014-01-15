@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "TDLAppDelegate.h"
-#import "TDLToDoListViewController.h"
 
 @interface TDLAddToDoItemViewController : UIViewController
 

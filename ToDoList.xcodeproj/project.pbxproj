@@ -12,6 +12,7 @@
 		BF56F246187A2F18009974E0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF56F245187A2F18009974E0 /* CoreData.framework */; };
 		BF56F249187A343B009974E0 /* ToDoList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BF56F247187A343B009974E0 /* ToDoList.xcdatamodeld */; };
 		BF671F8A1867F513002D373F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BF9616D11867E51E002C6A7A /* InfoPlist.strings */; };
+		BF91CF021886484D001B9AFD /* TDLMasterListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF91CF011886484D001B9AFD /* TDLMasterListViewController.m */; };
 		BF9616C91867E51E002C6A7A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9616C81867E51E002C6A7A /* Foundation.framework */; };
 		BF9616CB1867E51E002C6A7A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9616CA1867E51E002C6A7A /* CoreGraphics.framework */; };
 		BF9616CD1867E51E002C6A7A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9616CC1867E51E002C6A7A /* UIKit.framework */; };
@@ -43,6 +44,8 @@
 		BF2169E61869303F009D55DF /* TDLToDoListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDLToDoListViewController.m; sourceTree = "<group>"; };
 		BF56F245187A2F18009974E0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		BF56F248187A343B009974E0 /* ToDoList.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ToDoList.xcdatamodel; sourceTree = "<group>"; };
+		BF91CF001886484D001B9AFD /* TDLMasterListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDLMasterListViewController.h; sourceTree = "<group>"; };
+		BF91CF011886484D001B9AFD /* TDLMasterListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDLMasterListViewController.m; sourceTree = "<group>"; };
 		BF9616C51867E51E002C6A7A /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF9616C81867E51E002C6A7A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BF9616CA1867E51E002C6A7A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -124,6 +127,8 @@
 				BF9616D71867E51E002C6A7A /* TDLAppDelegate.h */,
 				BF9616D81867E51E002C6A7A /* TDLAppDelegate.m */,
 				BF9616F71867E812002C6A7A /* Main.storyboard */,
+				BF91CF001886484D001B9AFD /* TDLMasterListViewController.h */,
+				BF91CF011886484D001B9AFD /* TDLMasterListViewController.m */,
 				BF2169E51869303F009D55DF /* TDLToDoListViewController.h */,
 				BF2169E61869303F009D55DF /* TDLToDoListViewController.m */,
 				BF2169E218692D7C009D55DF /* TDLAddToDoItemViewController.h */,
@@ -262,6 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF9616D91867E51E002C6A7A /* TDLAppDelegate.m in Sources */,
+				BF91CF021886484D001B9AFD /* TDLMasterListViewController.m in Sources */,
 				BF56F249187A343B009974E0 /* ToDoList.xcdatamodeld in Sources */,
 				BF9616D51867E51E002C6A7A /* main.m in Sources */,
 				BF2169E71869303F009D55DF /* TDLToDoListViewController.m in Sources */,

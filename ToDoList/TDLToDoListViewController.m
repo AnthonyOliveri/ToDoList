@@ -138,7 +138,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"ListPrototypeCell";
+    static NSString *CellIdentifier = @"ItemPrototypeCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     NSManagedObject *toDoItem = [self.toDoItems objectAtIndex:[self findItemIndex:indexPath]];
     cell.textLabel.text = [toDoItem valueForKey:@"itemName"];
