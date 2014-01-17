@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13B42" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="ToDoItem" syncable="YES">
+    <entity name="ToDoItem" representedClassName="ToDoItem" syncable="YES">
         <attribute name="completed" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="creationDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="itemName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="listPosition" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <relationship name="listContainer" maxCount="1" deletionRule="No Action" destinationEntity="ToDoList" inverseName="itemsInList" inverseEntity="ToDoList" syncable="YES"/>
     </entity>
-    <entity name="ToDoList" syncable="YES">
+    <entity name="ToDoList" representedClassName="ToDoList" syncable="YES">
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="itemsInList" toMany="YES" deletionRule="Cascade" destinationEntity="ToDoItem" inverseName="listContainer" inverseEntity="ToDoItem" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ToDoItem" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="ToDoList" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ToDoItem" positionX="-45" positionY="8" width="128" height="118"/>
+        <element name="ToDoList" positionX="-245" positionY="6" width="128" height="75"/>
     </elements>
 </model>

@@ -87,14 +87,21 @@
     }
 }
 
-/*
+
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    if (indexPath.section == LISTS_SECTION)
+    {
+        return YES;
+    }
+    // ADD_LIST_SECTION
+    else
+    {
+        return NO;
+    }
 }
-*/
+
 
 /*
 // Override to support editing the table view.
@@ -117,14 +124,13 @@
 }
 */
 
-/*
+
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the item to be re-orderable.
     return YES;
 }
-*/
+
 
 /*
 #pragma mark - Navigation

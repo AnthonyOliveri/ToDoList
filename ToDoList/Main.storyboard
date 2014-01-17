@@ -83,7 +83,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6UB-Ly-ax0" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="AYR-l5-Mzt" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="808" y="-272"/>
+            <point key="canvasLocation" x="933" y="-272"/>
         </scene>
         <!--Add To Do Item View Controller - Add To-Do Item-->
         <scene sceneID="361-g3-hYV">
@@ -113,8 +113,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="bMC-Qf-VpR" firstAttribute="leading" secondItem="Ccg-qd-Kvm" secondAttribute="leading" constant="20" id="Sd9-PJ-KMS"/>
-                            <constraint firstItem="bMC-Qf-VpR" firstAttribute="top" secondItem="unt-Ff-jMx" secondAttribute="bottom" constant="70" id="Wob-HF-Uxn"/>
                             <constraint firstAttribute="trailing" secondItem="bMC-Qf-VpR" secondAttribute="trailing" constant="20" id="fH6-oX-11B"/>
+                            <constraint firstItem="bMC-Qf-VpR" firstAttribute="top" secondItem="unt-Ff-jMx" secondAttribute="bottom" constant="70" id="mbU-xz-2gq"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Add To-Do Item" id="kDB-cF-B85">
@@ -137,7 +137,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bXn-Hl-cve" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Cwc-3G-TZp" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1769" y="-272"/>
+            <point key="canvasLocation" x="1345" y="448"/>
         </scene>
         <!--Master List View Controller-->
         <scene sceneID="9ms-Lc-zJR">
@@ -194,7 +194,6 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="5Pk-Jx-Ksz">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" systemItem="add" id="VhU-Qx-5pu"/>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="MASTER LIST" textAlignment="center" minimumFontSize="17" id="4yv-xg-OYf">
                             <rect key="frame" x="93" y="7" width="134" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -211,6 +210,7 @@
         <!--Navigation Controller-->
         <scene sceneID="RLK-hZ-jwT">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kxv-f0-uJY" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eSV-LY-TYj" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="TsV-OF-77w"/>
@@ -223,9 +223,8 @@
                         <segue destination="AO7-Ak-og1" kind="relationship" relationship="rootViewController" id="b68-zC-WWm"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Kxv-f0-uJY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1349" y="-272"/>
+            <point key="canvasLocation" x="933" y="448"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="5n4-6p-fr5">
