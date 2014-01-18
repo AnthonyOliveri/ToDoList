@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "TDLAppDelegate.h"
 
+
+/*
+    Controller for the master list (list of lists). Here, the user
+    can add, delete, and reorder their collection of to-do lists.
+*/
+
 @interface TDLMasterListViewController : UITableViewController
 
 @end

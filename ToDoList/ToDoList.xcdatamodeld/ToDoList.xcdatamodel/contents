@@ -4,15 +4,16 @@
         <attribute name="completed" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="creationDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="itemName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="listPosition" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="itemPosition" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="listContainer" maxCount="1" deletionRule="No Action" destinationEntity="ToDoList" inverseName="itemsInList" inverseEntity="ToDoList" syncable="YES"/>
     </entity>
     <entity name="ToDoList" representedClassName="ToDoList" syncable="YES">
+        <attribute name="listPosition" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="itemsInList" toMany="YES" deletionRule="Cascade" destinationEntity="ToDoItem" inverseName="listContainer" inverseEntity="ToDoItem" syncable="YES"/>
     </entity>
     <elements>
         <element name="ToDoItem" positionX="-45" positionY="8" width="128" height="118"/>
-        <element name="ToDoList" positionX="-245" positionY="6" width="128" height="75"/>
+        <element name="ToDoList" positionX="-245" positionY="6" width="128" height="88"/>
     </elements>
 </model>

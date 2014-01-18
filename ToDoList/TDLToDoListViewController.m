@@ -57,7 +57,7 @@
     
     NSError *error;
     NSArray *unorderedItems =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
-    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"listPosition" ascending:YES]];
+    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"itemPosition" ascending:YES]];
     return [unorderedItems sortedArrayUsingDescriptors:descriptors];
 }
 
@@ -109,7 +109,8 @@
     [newItem setValue:newItemName forKey:@"itemName"];
     [newItem setValue:[NSNumber numberWithBool:false] forKey:@"completed"];
     [newItem setValue:[NSDate date] forKey:@"creationDate"];
-    [newItem setValue:last forKey:@"listPosition"];
+    [newItem setValue:last forKey:@"itemPosition"];
+    [newItem setValue:self.toDoLists[0] forKey:@"listContainer"];
     
     [self.appDelegate saveContext];
 }
@@ -219,7 +220,7 @@
         for(int j = itemIndex + 1; j < [self.toDoItems count]; j++)
         {
             NSNumber *newPosition = [NSNumber numberWithInteger:(j - 1)];
-            [self.toDoItems[j] setValue:newPosition forKey:@"listPosition"];
+            [self.toDoItems[j] setValue:newPosition forKey:@"itemPosition"];
         }
         
         // Delete the object
@@ -252,7 +253,7 @@
         for(long j = fromIndexPath.row + 1; j <= toIndexPath.row; j++)
         {
             newPosition = [NSNumber numberWithInteger:(j - 1)];
-            [self.toDoItems[j] setValue:newPosition forKey:@"listPosition"];
+            [self.toDoItems[j] setValue:newPosition forKey:@"itemPosition"];
         }
     }
     else if(fromIndexPath > toIndexPath)
@@ -261,11 +262,11 @@
         for(long j = toIndexPath.row; j < fromIndexPath.row; j++)
         {
             newPosition = [NSNumber numberWithInteger:(j + 1)];
-            [self.toDoItems[j] setValue:newPosition forKey:@"listPosition"];
+            [self.toDoItems[j] setValue:newPosition forKey:@"itemPosition"];
         }
     }
     newPosition = [NSNumber numberWithInteger:toIndexPath.row];
-    [self.toDoItems[movedItemIndex] setValue:newPosition forKey:@"listPosition"];
+    [self.toDoItems[movedItemIndex] setValue:newPosition forKey:@"itemPosition"];
     
     [self.appDelegate saveContext];
     self.toDoItems = [self loadItemData];
@@ -323,7 +324,7 @@
     int i = 0;
     for(NSManagedObject *itemObject in self.toDoItems)
     {
-        if([[itemObject valueForKey:@"listPosition"] integerValue] == indexPath.row)    break;
+        if([[itemObject valueForKey:@"itemPosition"] integerValue] == indexPath.row)    break;
         i++;
     }
     return i;

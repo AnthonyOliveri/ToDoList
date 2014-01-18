@@ -93,10 +93,12 @@
 
 - (IBAction)submitNewObject:(id)sender
 {
+    // Pass the name of the new item back to the To Do List VC
     if ([self.backViewController.title isEqualToString:@"To Do List"])
     {
         [self performSegueWithIdentifier:@"toList" sender:sender];
     }
+    // Pass the name of the new list back to the Master VC
     else if ([self.backViewController.title isEqualToString:@"Master List"])
     {
         [self performSegueWithIdentifier:@"toMaster" sender:sender];

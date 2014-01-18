@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "TDLAppDelegate.h"
 
+
+/* 
+    Here, the user to either enter a name for a new list or
+    enter a name for a new item of an existing list.
+*/
+
 @interface TDLAddObjectViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
