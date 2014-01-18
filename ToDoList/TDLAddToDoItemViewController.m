@@ -12,7 +12,8 @@
 
 @property TDLAppDelegate *appDelegate;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
-- (IBAction)cancelAddItem:(id)sender;
+- (IBAction)cancelAdd:(id)sender;
+- (IBAction)submitNewObject:(id)sender;
 
 @end
 
@@ -58,8 +59,34 @@
 }
 
 
-- (IBAction)cancelAddItem:(id)sender
+- (IBAction)cancelAdd:(id)sender
 {
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:Nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
+
+
+- (IBAction)submitNewObject:(id)sender
+{
+    if ([[self backViewController].title isEqualToString:@"To Do List"])
+    {
+        [self performSegueWithIdentifier:@"toList" sender:sender];
+    }
+    else if ([[self backViewController].title isEqualToString:@"Master List"])
+    {
+        [self performSegueWithIdentifier:@"toMaster" sender:sender];
+    }
+}
+
+
+- (UIViewController *)backViewController
+{
+    NSUInteger numberOfViewControllers = self.navigationController.viewControllers.count;
+    
+    if (numberOfViewControllers < 2)
+        return nil;
+    else
+        return [self.navigationController.viewControllers objectAtIndex:numberOfViewControllers - 2];
+}
+
+
 @end

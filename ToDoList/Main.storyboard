@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
-        <!--To Do List View Controller-->
+        <!--To Do List View Controller - To Do List-->
         <scene sceneID="qoV-2I-iOz">
             <objects>
-                <tableViewController id="XOJ-8X-nPE" customClass="TDLToDoListViewController" sceneMemberID="viewController">
+                <tableViewController title="To Do List" id="XOJ-8X-nPE" customClass="TDLToDoListViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="LJX-mB-9t0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -47,7 +47,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="eSV-LY-TYj" kind="modal" id="Pdb-4o-W8c"/>
+                                    <segue destination="AO7-Ak-og1" kind="push" id="rqC-ZU-pFj"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -61,11 +61,6 @@
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="PUq-tj-50b">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="lai-Zp-4oe">
-                            <connections>
-                                <segue destination="AYR-l5-Mzt" kind="unwind" unwindAction="unwindToMaster:" id="kv2-UO-HcY"/>
-                            </connections>
-                        </barButtonItem>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="My To-Do List" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="PRN-pc-r3Z">
                             <rect key="frame" x="60" y="7" width="200" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -81,11 +76,10 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6UB-Ly-ax0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="AYR-l5-Mzt" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="933" y="-272"/>
+            <point key="canvasLocation" x="707" y="-272"/>
         </scene>
-        <!--Add To Do Item View Controller - Add To-Do Item-->
+        <!--Add To Do Item View Controller - Add Object-->
         <scene sceneID="361-g3-hYV">
             <objects>
                 <viewController id="AO7-Ak-og1" customClass="TDLAddToDoItemViewController" sceneMemberID="viewController">
@@ -117,32 +111,34 @@
                             <constraint firstItem="bMC-Qf-VpR" firstAttribute="top" secondItem="unt-Ff-jMx" secondAttribute="bottom" constant="70" id="mbU-xz-2gq"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Add To-Do Item" id="kDB-cF-B85">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="BCu-UF-EnY">
+                    <navigationItem key="navigationItem" title="Add Object" id="kDB-cF-B85">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="FhC-RD-kdK">
                             <connections>
-                                <action selector="cancelAddItem:" destination="AO7-Ak-og1" id="GKW-T2-bng"/>
+                                <action selector="cancelAdd:" destination="AO7-Ak-og1" id="KSf-Zk-BI6"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Done" id="7JT-EB-a5z">
                             <connections>
-                                <segue destination="Cwc-3G-TZp" kind="unwind" unwindAction="unwindToList:" id="DqM-cN-NHs"/>
+                                <action selector="submitNewObject:" destination="AO7-Ak-og1" id="7Lj-59-cMi"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="doneButton" destination="7JT-EB-a5z" id="Jki-Wk-nKH"/>
                         <outlet property="textField" destination="bMC-Qf-VpR" id="88D-1o-sg9"/>
+                        <segue destination="Cwc-3G-TZp" kind="unwind" identifier="toList" unwindAction="unwindToList:" id="u7y-We-hhw"/>
+                        <segue destination="Cwc-3G-TZp" kind="unwind" identifier="toMaster" unwindAction="unwindToMaster:" id="LOw-tG-szz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bXn-Hl-cve" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Cwc-3G-TZp" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1345" y="448"/>
+            <point key="canvasLocation" x="1210" y="-162"/>
         </scene>
-        <!--Master List View Controller-->
+        <!--Master List View Controller - Master List-->
         <scene sceneID="9ms-Lc-zJR">
             <objects>
-                <tableViewController id="px4-B2-mG5" customClass="TDLMasterListViewController" sceneMemberID="viewController">
+                <tableViewController title="Master List" id="px4-B2-mG5" customClass="TDLMasterListViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="lf2-mA-gRf">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -184,6 +180,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="AO7-Ak-og1" kind="push" id="vty-8z-5Ik"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -206,25 +205,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mdz-KV-q0x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="281" y="-272"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="RLK-hZ-jwT">
-            <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Kxv-f0-uJY" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eSV-LY-TYj" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" id="TsV-OF-77w"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Jzs-wP-1dO">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="AO7-Ak-og1" kind="relationship" relationship="rootViewController" id="b68-zC-WWm"/>
-                    </connections>
-                </navigationController>
-            </objects>
-            <point key="canvasLocation" x="933" y="448"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="5n4-6p-fr5">
@@ -250,4 +230,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="vty-8z-5Ik"/>
+    </inferredMetricsTieBreakers>
 </document>
