@@ -79,10 +79,10 @@
             </objects>
             <point key="canvasLocation" x="707" y="-272"/>
         </scene>
-        <!--Add To Do Item View Controller - Add Object-->
+        <!--Add Object View Controller - Add Object-->
         <scene sceneID="361-g3-hYV">
             <objects>
-                <viewController id="AO7-Ak-og1" customClass="TDLAddToDoItemViewController" sceneMemberID="viewController">
+                <viewController id="AO7-Ak-og1" customClass="TDLAddObjectViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="unt-Ff-jMx"/>
                         <viewControllerLayoutGuide type="bottom" id="cea-cO-wSj"/>

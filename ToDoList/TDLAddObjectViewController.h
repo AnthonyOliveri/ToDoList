@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TDLAppDelegate.h"
 
-@interface TDLAddToDoItemViewController : UIViewController
+@interface TDLAddObjectViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 

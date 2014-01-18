@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TDLAddToDoItemViewController.h"
+#import "TDLAddObjectViewController.h"
 #import "TDLToDoListViewController.h"
 
 @interface TDLAppDelegate : UIResponder <UIApplicationDelegate>

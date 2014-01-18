@@ -88,7 +88,7 @@
 // Unwinds from modal segue of TDLAddToDoItemViewController
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
 {
-    TDLAddToDoItemViewController *source = [segue sourceViewController];
+    TDLAddObjectViewController *source = [segue sourceViewController];
     NSString *newItemName = source.textField.text;
     if([newItemName length] > 0)
     {

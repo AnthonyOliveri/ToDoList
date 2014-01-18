@@ -6,19 +6,21 @@
 //  Copyright (c) 2013 Anthony Oliveri. All rights reserved.
 //
 
-#import "TDLAddToDoItemViewController.h"
+#import "TDLAddObjectViewController.h"
 
-@interface TDLAddToDoItemViewController ()
+@interface TDLAddObjectViewController ()
 
 @property TDLAppDelegate *appDelegate;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
+@property (weak, nonatomic) UIViewController *backViewController;
+
 - (IBAction)cancelAdd:(id)sender;
 - (IBAction)submitNewObject:(id)sender;
 
 @end
 
 
-@implementation TDLAddToDoItemViewController
+@implementation TDLAddObjectViewController
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -36,6 +38,30 @@
     [super viewDidLoad];
     self.appDelegate = [[UIApplication sharedApplication] delegate];
     [self.textField becomeFirstResponder];
+    
+    // This view could have been pushed from a To-Do List or the Master List
+    self.backViewController = [self getBackViewController];
+    if ([self.backViewController.title isEqualToString:@"To Do List"])
+    {
+        self.textField.placeholder = @"New Item";
+        self.title = @"Add Item";
+    }
+    else if ([self.backViewController.title isEqualToString:@"Master List"])
+    {
+        self.textField.placeholder = @"New List";
+        self.title = @"Add List";
+    }
+}
+
+
+- (UIViewController *)getBackViewController
+{
+    NSUInteger numberOfViewControllers = self.navigationController.viewControllers.count;
+    
+    if (numberOfViewControllers < 2)
+        return nil;
+    else
+        return [self.navigationController.viewControllers objectAtIndex:numberOfViewControllers - 2];
 }
 
 
@@ -67,25 +93,14 @@
 
 - (IBAction)submitNewObject:(id)sender
 {
-    if ([[self backViewController].title isEqualToString:@"To Do List"])
+    if ([self.backViewController.title isEqualToString:@"To Do List"])
     {
         [self performSegueWithIdentifier:@"toList" sender:sender];
     }
-    else if ([[self backViewController].title isEqualToString:@"Master List"])
+    else if ([self.backViewController.title isEqualToString:@"Master List"])
     {
         [self performSegueWithIdentifier:@"toMaster" sender:sender];
     }
-}
-
-
-- (UIViewController *)backViewController
-{
-    NSUInteger numberOfViewControllers = self.navigationController.viewControllers.count;
-    
-    if (numberOfViewControllers < 2)
-        return nil;
-    else
-        return [self.navigationController.viewControllers objectAtIndex:numberOfViewControllers - 2];
 }
 
 
