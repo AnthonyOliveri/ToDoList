@@ -47,7 +47,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="AO7-Ak-og1" kind="push" id="rqC-ZU-pFj"/>
+                                    <segue destination="AO7-Ak-og1" kind="push" identifier="addItem" id="rqC-ZU-pFj"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -160,9 +160,6 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="XOJ-8X-nPE" kind="push" id="tHo-an-FuA"/>
-                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddListPrototypeCell" textLabel="co8-tB-jyT" style="IBUITableViewCellStyleDefault" id="6Ep-hA-CIB">
                                 <rect key="frame" x="0.0" y="130" width="320" height="44"/>
@@ -181,7 +178,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="AO7-Ak-og1" kind="push" id="vty-8z-5Ik"/>
+                                    <segue destination="AO7-Ak-og1" kind="push" identifier="addList" id="vty-8z-5Ik"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -201,6 +198,9 @@
                         </textField>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <segue destination="XOJ-8X-nPE" kind="push" identifier="goToList" id="Twd-eV-rDc"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mdz-KV-q0x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -231,6 +231,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="rqC-ZU-pFj"/>
+        <segue reference="vty-8z-5Ik"/>
     </inferredMetricsTieBreakers>
 </document>

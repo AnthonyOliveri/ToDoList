@@ -16,7 +16,6 @@
 @property TDLAppDelegate *appDelegate;
 @property (weak, nonatomic) IBOutlet UITextField *listTitle;
 
-
 @end
 
 
@@ -44,43 +43,24 @@
 // Fetch all the lists and items stored in Documents/CoreData.sqlite
 - (void)loadInitialData
 {
-    [self loadListData];
-    self.toDoItems = [self loadItemData];
+    [self loadItemData];
+    self.listTitle.text = [self.toDoList valueForKey:@"listTitle"];
 }
 
 
-- (NSArray *)loadItemData
+- (void)loadItemData
 {
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoItem" inManagedObjectContext: self.appDelegate.managedObjectContext];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"listContainer = %@", self.toDoList];
+    
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
+    [request setPredicate:predicate];
     
     NSError *error;
     NSArray *unorderedItems =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
     NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"itemPosition" ascending:YES]];
-    return [unorderedItems sortedArrayUsingDescriptors:descriptors];
-}
-
-
--(void)loadListData
-{
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoList" inManagedObjectContext: self.appDelegate.managedObjectContext];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDesc];
-    
-    NSError *error;
-    self.toDoLists =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
-    
-    // If this is the first time the app is launched, set list title to default
-    if([self.toDoLists count] == 0)
-    {
-        NSManagedObject *newList = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoList" inManagedObjectContext:self.appDelegate.managedObjectContext];
-        [newList setValue:@"My To-Do List" forKey:@"title"];
-    }
-    [self.appDelegate saveContext];
-    
-    self.toDoLists =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
-    self.listTitle.text = [self.toDoLists[0] valueForKey:@"title"];
+    self.toDoItems = [unorderedItems sortedArrayUsingDescriptors:descriptors];
 }
 
 
@@ -93,7 +73,7 @@
     if([newItemName length] > 0)
     {
         [self storeNewItem:newItemName];
-        self.toDoItems = [self loadItemData];
+        [self loadItemData];
         [self.tableView reloadData];
     }
 }
@@ -103,14 +83,13 @@
 - (void)storeNewItem:(NSString *)newItemName
 {
     NSNumber *last = [NSNumber numberWithUnsignedInteger:[self.toDoItems count]];
-    
     NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
     
     [newItem setValue:newItemName forKey:@"itemName"];
     [newItem setValue:[NSNumber numberWithBool:false] forKey:@"completed"];
     [newItem setValue:[NSDate date] forKey:@"creationDate"];
     [newItem setValue:last forKey:@"itemPosition"];
-    [newItem setValue:self.toDoLists[0] forKey:@"listContainer"];
+    [newItem setValue:self.toDoList forKey:@"listContainer"];
     
     [self.appDelegate saveContext];
 }
@@ -226,7 +205,7 @@
         // Delete the object
         [self.appDelegate.managedObjectContext deleteObject:self.toDoItems[itemIndex]];
         [self.appDelegate saveContext];
-        self.toDoItems = [self loadItemData];
+        [self loadItemData];
         
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [tableView reloadData];
@@ -269,22 +248,22 @@
     [self.toDoItems[movedItemIndex] setValue:newPosition forKey:@"itemPosition"];
     
     [self.appDelegate saveContext];
-    self.toDoItems = [self loadItemData];
+    [self loadItemData];
     [tableView reloadData];
 }
 
 
-/*
 #pragma mark - Navigation
 
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([[segue identifier] isEqualToString:@"addItem"])
+    {
+        TDLAddObjectViewController *addObjectVC = (TDLAddObjectViewController *)[segue destinationViewController];
+        addObjectVC.backViewController = self;
+    }
 }
-
- */
 
 
 #pragma mark - Table view delegate
@@ -292,9 +271,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section != ITEMS_SECTION) return;
-    
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    
+    if (indexPath.section != ITEMS_SECTION) return;
     
     int itemIndex = [self findItemIndex:indexPath];
     bool completed = [[self.toDoItems[itemIndex] valueForKey:@"completed"] boolValue];
@@ -310,7 +289,7 @@
 - (IBAction)textFieldReturn:(id)sender
 {
     // Save the title
-    [self.toDoLists[0] setValue:self.listTitle.text forKey:@"title"];
+    [self.toDoList setValue:self.listTitle.text forKey:@"ListTitle"];
     [self.appDelegate saveContext];
     
     // Dismiss the keyboard

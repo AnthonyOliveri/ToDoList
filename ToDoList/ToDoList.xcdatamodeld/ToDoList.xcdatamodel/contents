@@ -9,7 +9,7 @@
     </entity>
     <entity name="ToDoList" representedClassName="ToDoList" syncable="YES">
         <attribute name="listPosition" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="listTitle" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="itemsInList" toMany="YES" deletionRule="Cascade" destinationEntity="ToDoItem" inverseName="listContainer" inverseEntity="ToDoItem" syncable="YES"/>
     </entity>
     <elements>

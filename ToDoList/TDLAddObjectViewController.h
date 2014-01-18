@@ -18,6 +18,7 @@
 @interface TDLAddObjectViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
+@property UIViewController *backViewController;
 
 -(IBAction)textFieldReturn:(id)sender;
 

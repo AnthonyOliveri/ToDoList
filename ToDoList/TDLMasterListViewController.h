@@ -17,4 +17,6 @@
 
 @interface TDLMasterListViewController : UITableViewController
 
+@property NSArray *toDoLists;
+
 @end

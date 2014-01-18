@@ -15,6 +15,7 @@
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 @property TDLAppDelegate *appDelegate;
+@property NSManagedObject *selectedList;
 
 @end
 
@@ -34,14 +35,64 @@
     [super viewDidLoad];
     self.appDelegate = [[UIApplication sharedApplication] delegate];
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self loadListData];
 }
+
+
+-(void)loadListData
+{
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoList" inManagedObjectContext: self.appDelegate.managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSError *error;
+    ////
+    self.toDoLists =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    
+    // If this is the first time the app is launched, set list title to default
+    if([self.toDoLists count] == 0)
+    {
+        NSManagedObject *newList = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoList" inManagedObjectContext:self.appDelegate.managedObjectContext];
+        [newList setValue:@"My To-Do List" forKey:@"listTitle"];
+        [newList setValue:[NSNumber numberWithInt:0] forKey:@"listPosition"];
+        [newList setValue:Nil forKey:@"itemsInList"];
+    }
+    [self.appDelegate saveContext];
+    
+    NSArray *unorderedLists =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"listPosition" ascending:YES]];
+    self.toDoLists = [unorderedLists sortedArrayUsingDescriptors:descriptors];
+}
+
 
 // Reload items to get the newly entered item
 // Unwinds from modal segue of TDLAddToDoItemViewController
 - (IBAction)unwindToMaster:(UIStoryboardSegue *)segue
 {
     TDLAddObjectViewController *source = [segue sourceViewController];
+    NSString *newListName = source.textField.text;
+    if([newListName length] > 0)
+    {
+        [self storeNewList:newListName];
+        [self loadListData];
+        [self.tableView reloadData];
+    }
 }
+
+
+// Save the new item as a managed object in the Documents/CoreData.sqlite directory
+- (void)storeNewList:(NSString *)newListName
+{
+    NSNumber *last = [NSNumber numberWithUnsignedInteger:[self.toDoLists count]];
+    NSManagedObject *newList = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoList" inManagedObjectContext:self.appDelegate.managedObjectContext];
+    
+    [newList setValue:newListName forKey:@"listTitle"];
+    [newList setValue:last forKey:@"listPosition"];
+    [newList setValue:Nil forKey:@"itemsInList"];
+    
+    [self.appDelegate saveContext];
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -62,7 +113,7 @@
 {
     if (section == LISTS_SECTION)
     {
-        return 1;
+        return [self.toDoLists count];
     }
     // ADD_LIST_SECTION
     else
@@ -77,6 +128,8 @@
     {
         static NSString *CellIdentifier = @"ListPrototypeCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+        NSManagedObject *toDoList = [self.toDoLists objectAtIndex:[self findListIndex:indexPath]];
+        cell.textLabel.text = [toDoList valueForKey:@"listTitle"];
         return cell;
     }
     // ADD_LIST_SECTION
@@ -132,26 +185,54 @@
 }
 
 
-/*
+
 #pragma mark - Navigation
 
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([[segue identifier] isEqualToString:@"addList"])
+    {
+        TDLAddObjectViewController *addObjectVC = (TDLAddObjectViewController *)[segue destinationViewController];
+        addObjectVC.backViewController = self;
+    }
+    else if ([[segue identifier] isEqualToString:@"goToList"])
+    {
+        TDLToDoListViewController *toDoListVC = (TDLToDoListViewController *)[segue destinationViewController];
+        toDoListVC.toDoList = self.selectedList;
+    }
 }
 
- */
 
 
 #pragma mark - Table view delegate
 
 
+// Manual segue to the selected list
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    
+    if (indexPath.section != LISTS_SECTION) return;
+    
+    int listIndex = [self findListIndex:indexPath];
+    self.selectedList = self.toDoLists[listIndex];
+    [self performSegueWithIdentifier:@"goToList" sender:Nil];
 }
+
+
+// Find the item in the store
+- (int) findListIndex:(NSIndexPath *)indexPath
+{
+    int i = 0;
+    for(NSManagedObject *listObject in self.toDoLists)
+    {
+        if([[listObject valueForKey:@"listPosition"] integerValue] == indexPath.row)    break;
+        i++;
+    }
+    return i;
+}
+
 
 
 @end

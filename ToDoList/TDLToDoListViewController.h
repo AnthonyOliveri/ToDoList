@@ -17,7 +17,7 @@
 
 @interface TDLToDoListViewController : UITableViewController
 
-@property NSArray *toDoItems;     // managed objects from persistent store
-@property NSArray *toDoLists;
+@property NSArray *toDoItems;     
+@property NSManagedObject *toDoList;
 
 @end

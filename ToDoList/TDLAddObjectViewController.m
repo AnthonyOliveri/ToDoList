@@ -12,7 +12,6 @@
 
 @property TDLAppDelegate *appDelegate;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
-@property (weak, nonatomic) UIViewController *backViewController;
 
 - (IBAction)cancelAdd:(id)sender;
 - (IBAction)submitNewObject:(id)sender;
@@ -40,7 +39,6 @@
     [self.textField becomeFirstResponder];
     
     // This view could have been pushed from a To-Do List or the Master List
-    self.backViewController = [self getBackViewController];
     if ([self.backViewController.title isEqualToString:@"To Do List"])
     {
         self.textField.placeholder = @"New Item";
@@ -51,17 +49,6 @@
         self.textField.placeholder = @"New List";
         self.title = @"Add List";
     }
-}
-
-
-- (UIViewController *)getBackViewController
-{
-    NSUInteger numberOfViewControllers = self.navigationController.viewControllers.count;
-    
-    if (numberOfViewControllers < 2)
-        return nil;
-    else
-        return [self.navigationController.viewControllers objectAtIndex:numberOfViewControllers - 2];
 }
 
 
