@@ -46,19 +46,6 @@
     [request setEntity:entityDesc];
     
     NSError *error;
-    ////
-    self.toDoLists =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
-    
-    // If this is the first time the app is launched, set list title to default
-    if([self.toDoLists count] == 0)
-    {
-        NSManagedObject *newList = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoList" inManagedObjectContext:self.appDelegate.managedObjectContext];
-        [newList setValue:@"My To-Do List" forKey:@"listTitle"];
-        [newList setValue:[NSNumber numberWithInt:0] forKey:@"listPosition"];
-        [newList setValue:Nil forKey:@"itemsInList"];
-    }
-    [self.appDelegate saveContext];
-    
     NSArray *unorderedLists =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
     NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"listPosition" ascending:YES]];
     self.toDoLists = [unorderedLists sortedArrayUsingDescriptors:descriptors];
@@ -156,32 +143,65 @@
 }
 
 
-/*
-// Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        int listIndex = [self findListIndex:indexPath];
+        
+        // Decrement the list position of all lists that will move up the master list
+        for(int j = listIndex + 1; j < [self.toDoLists count]; j++)
+        {
+            NSNumber *newPosition = [NSNumber numberWithInteger:(j - 1)];
+            [self.toDoLists[j] setValue:newPosition forKey:@"listPosition"];
+        }
+        
+        // Delete the object
+        [self.appDelegate.managedObjectContext deleteObject:self.toDoLists[listIndex]];
+        [self.appDelegate saveContext];
+        [self loadListData];
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+        [tableView reloadData];
+    }
 }
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
 
 
-// Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
+}
+
+
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
+    int movedListIndex = [self findListIndex:fromIndexPath];
+    NSNumber *newPosition;
+    if(fromIndexPath < toIndexPath)
+    {
+        // Update the list position of all list model objects
+        for(long j = fromIndexPath.row + 1; j <= toIndexPath.row; j++)
+        {
+            newPosition = [NSNumber numberWithInteger:(j - 1)];
+            [self.toDoLists[j] setValue:newPosition forKey:@"listPosition"];
+        }
+    }
+    else if(fromIndexPath > toIndexPath)
+    {
+        // Update the list position of all list model objects
+        for(long j = toIndexPath.row; j < fromIndexPath.row; j++)
+        {
+            newPosition = [NSNumber numberWithInteger:(j + 1)];
+            [self.toDoLists[j] setValue:newPosition forKey:@"listPosition"];
+        }
+    }
+    newPosition = [NSNumber numberWithInteger:toIndexPath.row];
+    [self.toDoLists[movedListIndex] setValue:newPosition forKey:@"listPosition"];
+    
+    [self.appDelegate saveContext];
+    [self loadListData];
+    [tableView reloadData];
 }
 
 

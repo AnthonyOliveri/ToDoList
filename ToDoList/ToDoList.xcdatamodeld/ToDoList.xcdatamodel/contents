@@ -5,7 +5,7 @@
         <attribute name="creationDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="itemName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="itemPosition" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <relationship name="listContainer" maxCount="1" deletionRule="No Action" destinationEntity="ToDoList" inverseName="itemsInList" inverseEntity="ToDoList" syncable="YES"/>
+        <relationship name="listContainer" maxCount="1" deletionRule="Nullify" destinationEntity="ToDoList" inverseName="itemsInList" inverseEntity="ToDoList" syncable="YES"/>
     </entity>
     <entity name="ToDoList" representedClassName="ToDoList" syncable="YES">
         <attribute name="listPosition" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -13,7 +13,7 @@
         <relationship name="itemsInList" toMany="YES" deletionRule="Cascade" destinationEntity="ToDoItem" inverseName="listContainer" inverseEntity="ToDoItem" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ToDoItem" positionX="-45" positionY="8" width="128" height="118"/>
-        <element name="ToDoList" positionX="-245" positionY="6" width="128" height="88"/>
+        <element name="ToDoItem" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ToDoList" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>
