@@ -19,7 +19,9 @@
 
 @end
 
+
 @implementation TDLMasterListViewController
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -29,6 +31,16 @@
     }
     return self;
 }
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == LISTS_SECTION)
+        return 25.0f;
+    else
+        return 10.0f;
+}
+
 
 - (void)viewDidLoad
 {

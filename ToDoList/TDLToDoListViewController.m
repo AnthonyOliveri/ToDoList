@@ -31,6 +31,15 @@
 }
 
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == ITEMS_SECTION)
+        return 25.0f;
+    else
+        return 10.0f;
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
