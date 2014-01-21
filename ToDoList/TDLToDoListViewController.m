@@ -135,14 +135,20 @@
         NSManagedObject *toDoItem = [self.toDoItems objectAtIndex:[self findItemIndex:indexPath]];
         cell.textLabel.text = [toDoItem valueForKey:@"itemName"];
         
+        // Completed items get a strikethrough and are grayed out
         bool completed = [[toDoItem valueForKey:@"completed"] boolValue];
         if(completed)
         {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        }
-        else
-        {
-            cell.accessoryType = UITableViewCellAccessoryNone;
+            NSMutableAttributedString *grayStrikeThrough = [[NSMutableAttributedString alloc] initWithString:cell.textLabel.text];
+            [grayStrikeThrough addAttribute:NSStrikethroughStyleAttributeName
+                                    value:[NSNumber numberWithInt:NSUnderlineStyleSingle]
+                                    range:(NSRange){0,[grayStrikeThrough length]}];
+            
+            [grayStrikeThrough addAttribute:NSForegroundColorAttributeName
+                           value:[UIColor lightGrayColor]
+                                      range:(NSRange){0,[grayStrikeThrough length]}];
+            
+            cell.textLabel.attributedText = grayStrikeThrough;
         }
         
         return cell;

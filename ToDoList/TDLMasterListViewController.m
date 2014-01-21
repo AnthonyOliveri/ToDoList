@@ -33,8 +33,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.appDelegate = [[UIApplication sharedApplication] delegate];
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
+    self.appDelegate = [[UIApplication sharedApplication] delegate];
     [self loadListData];
 }
 
@@ -252,7 +253,6 @@
     }
     return i;
 }
-
 
 
 @end
