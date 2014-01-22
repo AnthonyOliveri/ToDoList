@@ -48,20 +48,21 @@
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
     self.appDelegate = [[UIApplication sharedApplication] delegate];
-    [self loadListData];
+    self.toDoLists = [self loadObjects:@"ToDoList"];
 }
 
 
--(void)loadListData
+// Fetch all the lists or items stored in Documents/CoreData.sqlite
+-(NSArray *)loadObjects:(NSString *)toDoEntity
 {
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"ToDoList" inManagedObjectContext: self.appDelegate.managedObjectContext];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:toDoEntity inManagedObjectContext: self.appDelegate.managedObjectContext];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     
     NSError *error;
-    NSArray *unorderedLists =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *unorderedObjects =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
     NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"tablePosition" ascending:YES]];
-    self.toDoLists = [unorderedLists sortedArrayUsingDescriptors:descriptors];
+    return [unorderedObjects sortedArrayUsingDescriptors:descriptors];
 }
 
 
@@ -74,7 +75,7 @@
     if([newListName length] > 0)
     {
         [self storeNewList:newListName];
-        [self loadListData];
+        self.toDoLists = [self loadObjects:@"ToDoList"];
         [self.tableView reloadData];
     }
 }
@@ -131,9 +132,27 @@
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
         NSManagedObject *toDoList = [self.toDoLists objectAtIndex:[self findListIndex:indexPath]];
         cell.textLabel.text = [toDoList valueForKey:@"name"];
+        
+        // Completed items get a strikethrough and are grayed out
+        bool completed = [[toDoList valueForKey:@"completed"] boolValue];
+        if(completed)
+        {
+            NSMutableAttributedString *grayStrikeThrough = [[NSMutableAttributedString alloc] initWithString:cell.textLabel.text];
+            [grayStrikeThrough addAttribute:NSStrikethroughStyleAttributeName
+                                      value:[NSNumber numberWithInt:NSUnderlineStyleSingle]
+                                      range:(NSRange){0,[grayStrikeThrough length]}];
+            
+            [grayStrikeThrough addAttribute:NSForegroundColorAttributeName
+                                      value:[UIColor lightGrayColor]
+                                      range:(NSRange){0,[grayStrikeThrough length]}];
+            
+            cell.textLabel.attributedText = grayStrikeThrough;
+        }
+
         return cell;
     }
     // ADD_LIST_SECTION
+    else
     {
         static NSString *CellIdentifier = @"AddListPrototypeCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
@@ -173,7 +192,7 @@
         // Delete the object
         [self.appDelegate.managedObjectContext deleteObject:self.toDoLists[listIndex]];
         [self.appDelegate saveContext];
-        [self loadListData];
+        self.toDoLists = [self loadObjects:@"ToDoList"];
         
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [tableView reloadData];
@@ -214,7 +233,7 @@
     [self.toDoLists[movedListIndex] setValue:newPosition forKey:@"tablePosition"];
     
     [self.appDelegate saveContext];
-    [self loadListData];
+    self.toDoLists = [self loadObjects:@"ToDoList"];
     [tableView reloadData];
 }
 

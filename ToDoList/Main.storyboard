@@ -59,9 +59,7 @@
                             <outlet property="delegate" destination="XOJ-8X-nPE" id="glE-zn-a2c"/>
                         </connections>
                     </tableView>
-                    <toolbarItems>
-                        <barButtonItem title="Add Item" style="done" id="BWy-XK-IUb"/>
-                    </toolbarItems>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" id="PUq-tj-50b">
                         <nil key="title"/>
                         <textField key="titleView" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="My To-Do List" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="PRN-pc-r3Z">

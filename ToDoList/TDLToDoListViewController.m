@@ -15,6 +15,7 @@
 
 @property TDLAppDelegate *appDelegate;
 @property (weak, nonatomic) IBOutlet UITextField *listTitle;
+@property NSInteger numItemsUncompleted;
 
 @end
 
@@ -45,17 +46,14 @@
     [super viewDidLoad];
     self.appDelegate = [[UIApplication sharedApplication] delegate];
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    [self loadInitialData];
+
+    [self loadItemData];
+    self.listTitle.text = [self.toDoList valueForKey:@"name"];
+    [self calculateItemsUncompleted];
 }
 
 
 // Fetch all the lists and items stored in Documents/CoreData.sqlite
-- (void)loadInitialData
-{
-    [self loadItemData];
-    self.listTitle.text = [self.toDoList valueForKey:@"name"];
-}
-
 
 - (void)loadItemData
 {
@@ -70,6 +68,20 @@
     NSArray *unorderedItems =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
     NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"tablePosition" ascending:YES]];
     self.toDoItems = [unorderedItems sortedArrayUsingDescriptors:descriptors];
+}
+
+
+// When numItemsUncompleted reaches 0, all items are completed and the list is marked as completed
+- (void)calculateItemsUncompleted
+{
+    self.numItemsUncompleted = 0;
+    for (NSManagedObject *item in self.toDoItems)
+    {
+        if ([[item valueForKey:@"completed"] integerValue] == 0)
+        {
+            self.numItemsUncompleted++;
+        }
+    }
 }
 
 
@@ -289,6 +301,22 @@
     int itemIndex = [self findItemIndex:indexPath];
     bool completed = [[self.toDoItems[itemIndex] valueForKey:@"completed"] boolValue];
     NSNumber *isCompleted = [NSNumber numberWithBool:!completed];
+    
+    if ([isCompleted boolValue])
+    {
+        if (--self.numItemsUncompleted == 0)
+        {
+            [self.toDoList setValue:[NSNumber numberWithBool:true] forKey:@"completed"];
+        }
+    }
+    else
+    {
+        // Only set list to uncompleted if it was previously marked as completed
+        if (self.numItemsUncompleted++ == 0)
+        {
+            [self.toDoList setValue:[NSNumber numberWithBool:false] forKey:@"completed"];
+        }
+    }
     
     [self.toDoItems[itemIndex] setValue:isCompleted forKey:@"completed"];
     [self.appDelegate saveContext];
