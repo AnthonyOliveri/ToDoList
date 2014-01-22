@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13B42" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="ToDoItem" representedClassName="ToDoItem" syncable="YES">
+    <entity name="ToDoEntity" isAbstract="YES" syncable="YES">
         <attribute name="completed" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="creationDate" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="itemName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="itemPosition" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tablePosition" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="ToDoItem" representedClassName="ToDoItem" parentEntity="ToDoEntity" syncable="YES">
         <relationship name="listContainer" maxCount="1" deletionRule="Nullify" destinationEntity="ToDoList" inverseName="itemsInList" inverseEntity="ToDoList" syncable="YES"/>
     </entity>
-    <entity name="ToDoList" representedClassName="ToDoList" syncable="YES">
-        <attribute name="listPosition" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="listTitle" optional="YES" attributeType="String" syncable="YES"/>
+    <entity name="ToDoList" representedClassName="ToDoList" parentEntity="ToDoEntity" syncable="YES">
         <relationship name="itemsInList" toMany="YES" deletionRule="Cascade" destinationEntity="ToDoItem" inverseName="listContainer" inverseEntity="ToDoItem" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ToDoItem" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="ToDoList" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ToDoItem" positionX="180" positionY="45" width="128" height="58"/>
+        <element name="ToDoList" positionX="-38" positionY="45" width="128" height="60"/>
+        <element name="ToDoEntity" positionX="72" positionY="-108" width="128" height="90"/>
     </elements>
 </model>

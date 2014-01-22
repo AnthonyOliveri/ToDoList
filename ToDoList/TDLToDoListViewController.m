@@ -53,7 +53,7 @@
 - (void)loadInitialData
 {
     [self loadItemData];
-    self.listTitle.text = [self.toDoList valueForKey:@"listTitle"];
+    self.listTitle.text = [self.toDoList valueForKey:@"name"];
 }
 
 
@@ -68,7 +68,7 @@
     
     NSError *error;
     NSArray *unorderedItems =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
-    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"itemPosition" ascending:YES]];
+    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"tablePosition" ascending:YES]];
     self.toDoItems = [unorderedItems sortedArrayUsingDescriptors:descriptors];
 }
 
@@ -94,10 +94,9 @@
     NSNumber *last = [NSNumber numberWithUnsignedInteger:[self.toDoItems count]];
     NSManagedObject *newItem = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoItem" inManagedObjectContext:self.appDelegate.managedObjectContext];
     
-    [newItem setValue:newItemName forKey:@"itemName"];
+    [newItem setValue:newItemName forKey:@"name"];
+    [newItem setValue:last forKey:@"tablePosition"];
     [newItem setValue:[NSNumber numberWithBool:false] forKey:@"completed"];
-    [newItem setValue:[NSDate date] forKey:@"creationDate"];
-    [newItem setValue:last forKey:@"itemPosition"];
     [newItem setValue:self.toDoList forKey:@"listContainer"];
     
     [self.appDelegate saveContext];
@@ -142,7 +141,7 @@
         static NSString *CellIdentifier = @"ItemPrototypeCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
         NSManagedObject *toDoItem = [self.toDoItems objectAtIndex:[self findItemIndex:indexPath]];
-        cell.textLabel.text = [toDoItem valueForKey:@"itemName"];
+        cell.textLabel.text = [toDoItem valueForKey:@"name"];
         
         // Completed items get a strikethrough and are grayed out
         bool completed = [[toDoItem valueForKey:@"completed"] boolValue];
@@ -214,7 +213,7 @@
         for(int j = itemIndex + 1; j < [self.toDoItems count]; j++)
         {
             NSNumber *newPosition = [NSNumber numberWithInteger:(j - 1)];
-            [self.toDoItems[j] setValue:newPosition forKey:@"itemPosition"];
+            [self.toDoItems[j] setValue:newPosition forKey:@"tablePosition"];
         }
         
         // Delete the object
@@ -244,7 +243,7 @@
         for(long j = fromIndexPath.row + 1; j <= toIndexPath.row; j++)
         {
             newPosition = [NSNumber numberWithInteger:(j - 1)];
-            [self.toDoItems[j] setValue:newPosition forKey:@"itemPosition"];
+            [self.toDoItems[j] setValue:newPosition forKey:@"tablePosition"];
         }
     }
     else if(fromIndexPath > toIndexPath)
@@ -253,11 +252,11 @@
         for(long j = toIndexPath.row; j < fromIndexPath.row; j++)
         {
             newPosition = [NSNumber numberWithInteger:(j + 1)];
-            [self.toDoItems[j] setValue:newPosition forKey:@"itemPosition"];
+            [self.toDoItems[j] setValue:newPosition forKey:@"tablePosition"];
         }
     }
     newPosition = [NSNumber numberWithInteger:toIndexPath.row];
-    [self.toDoItems[movedItemIndex] setValue:newPosition forKey:@"itemPosition"];
+    [self.toDoItems[movedItemIndex] setValue:newPosition forKey:@"tablePosition"];
     
     [self.appDelegate saveContext];
     [self loadItemData];
@@ -301,7 +300,7 @@
 - (IBAction)textFieldReturn:(id)sender
 {
     // Save the title
-    [self.toDoList setValue:self.listTitle.text forKey:@"ListTitle"];
+    [self.toDoList setValue:self.listTitle.text forKey:@"name"];
     [self.appDelegate saveContext];
     
     // Dismiss the keyboard
@@ -315,7 +314,7 @@
     int i = 0;
     for(NSManagedObject *itemObject in self.toDoItems)
     {
-        if([[itemObject valueForKey:@"itemPosition"] integerValue] == indexPath.row)    break;
+        if([[itemObject valueForKey:@"tablePosition"] integerValue] == indexPath.row)    break;
         i++;
     }
     return i;

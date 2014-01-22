@@ -60,7 +60,7 @@
     
     NSError *error;
     NSArray *unorderedLists =  [self.appDelegate.managedObjectContext executeFetchRequest:request error:&error];
-    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"listPosition" ascending:YES]];
+    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"tablePosition" ascending:YES]];
     self.toDoLists = [unorderedLists sortedArrayUsingDescriptors:descriptors];
 }
 
@@ -86,8 +86,9 @@
     NSNumber *last = [NSNumber numberWithUnsignedInteger:[self.toDoLists count]];
     NSManagedObject *newList = [NSEntityDescription insertNewObjectForEntityForName:@"ToDoList" inManagedObjectContext:self.appDelegate.managedObjectContext];
     
-    [newList setValue:newListName forKey:@"listTitle"];
-    [newList setValue:last forKey:@"listPosition"];
+    [newList setValue:newListName forKey:@"name"];
+    [newList setValue:last forKey:@"tablePosition"];
+    [newList setValue:false forKey:@"completed"];
     [newList setValue:Nil forKey:@"itemsInList"];
     
     [self.appDelegate saveContext];
@@ -129,7 +130,7 @@
         static NSString *CellIdentifier = @"ListPrototypeCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
         NSManagedObject *toDoList = [self.toDoLists objectAtIndex:[self findListIndex:indexPath]];
-        cell.textLabel.text = [toDoList valueForKey:@"listTitle"];
+        cell.textLabel.text = [toDoList valueForKey:@"name"];
         return cell;
     }
     // ADD_LIST_SECTION
@@ -166,7 +167,7 @@
         for(int j = listIndex + 1; j < [self.toDoLists count]; j++)
         {
             NSNumber *newPosition = [NSNumber numberWithInteger:(j - 1)];
-            [self.toDoLists[j] setValue:newPosition forKey:@"listPosition"];
+            [self.toDoLists[j] setValue:newPosition forKey:@"tablePosition"];
         }
         
         // Delete the object
@@ -197,7 +198,7 @@
         for(long j = fromIndexPath.row + 1; j <= toIndexPath.row; j++)
         {
             newPosition = [NSNumber numberWithInteger:(j - 1)];
-            [self.toDoLists[j] setValue:newPosition forKey:@"listPosition"];
+            [self.toDoLists[j] setValue:newPosition forKey:@"tablePosition"];
         }
     }
     else if(fromIndexPath > toIndexPath)
@@ -206,11 +207,11 @@
         for(long j = toIndexPath.row; j < fromIndexPath.row; j++)
         {
             newPosition = [NSNumber numberWithInteger:(j + 1)];
-            [self.toDoLists[j] setValue:newPosition forKey:@"listPosition"];
+            [self.toDoLists[j] setValue:newPosition forKey:@"tablePosition"];
         }
     }
     newPosition = [NSNumber numberWithInteger:toIndexPath.row];
-    [self.toDoLists[movedListIndex] setValue:newPosition forKey:@"listPosition"];
+    [self.toDoLists[movedListIndex] setValue:newPosition forKey:@"tablePosition"];
     
     [self.appDelegate saveContext];
     [self loadListData];
@@ -260,7 +261,7 @@
     int i = 0;
     for(NSManagedObject *listObject in self.toDoLists)
     {
-        if([[listObject valueForKey:@"listPosition"] integerValue] == indexPath.row)    break;
+        if([[listObject valueForKey:@"tablePosition"] integerValue] == indexPath.row)    break;
         i++;
     }
     return i;
